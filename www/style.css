@@ -34,8 +34,9 @@ input {
 }
 
 .video {
+    margin-top: 20px;
     float: left;
-    width: 25vw;
+    width: 20vw;
     height: 50vh;
     overflow: hidden;
     position: relative;
@@ -43,12 +44,12 @@ input {
 
 .video.one {
     width: 100vw;
-    height: 100vh;
+    height: 25vh;
 }
 
 .video.two {
     width: 50vw;
-    height: 100vh;
+    height: 40vh;
 }
 
 .video.three {
@@ -68,12 +69,13 @@ input {
 }
 
 .video video {
-    width: 100%;
+    width: 90%;
     height: 100%;
     display: block;
     margin: auto;
     box-sizing: border-box;
     object-fit: cover;
+    border-radius: 20px;
 }
 
 .video video.mirror {
@@ -90,10 +92,10 @@ input {
 
 .video button {
     position: absolute;
-    top: 0.1rem;
-    right: 0px;
+    top: 1rem;
+    right: 40px;
     z-index: 10;
-    font-size: 2rem;
+    font-size: 1rem;
     color: white;
     background: none;
     border: none;
@@ -152,6 +154,21 @@ input {
 }
 
 #chatWrap {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    background: #fff;
+    width: 100%;
+    height: 70vh;
+    margin: auto;
+    padding: 1rem;
+    padding-left: 20px;
+    padding-right: 20px;
+    box-sizing: border-box;
+    border-radius: 1rem;
+}
+
+#youtubeWrap {
     background: #fff;
     position: fixed;
     bottom: 6rem;
@@ -169,8 +186,10 @@ input {
 #chatWrap #chats {
     overflow-y: auto;
     overflow: auto;
-    max-height: 240px;
+    max-height: 47vh;
     margin: auto;
+    padding-left: 10px;
+    margin-bottom: 20px;
     background: /* Shadow covers */
     linear-gradient(white 30%, rgba(255, 255, 255, 0)), linear-gradient(rgba(255, 255, 255, 0), white 70%) 0 100%, /* Shadows */
     radial-gradient(50% 0, farthest-side, rgba(0, 0, 0, 0.2), rgba(0, 0, 0, 0)), radial-gradient(50% 100%, farthest-side, rgba(0, 0, 0, 0.2), rgba(0, 0, 0, 0)) 0 100%;
@@ -198,7 +217,9 @@ input {
 }
 
 #chatWrap #composeBox {
-    position: relative;
+    position: fixed;
+    bottom: 6rem;
+    width: 83%;
     background: #f6f6f6;
     border-radius: 1rem;
     padding: 0.7rem 1rem;
@@ -325,6 +346,10 @@ input {
     color: #e74c3c !important;
 }
 
+.icon-youtube {
+    content: "\f167";
+}
+
 @media only screen and (max-width: 960px) {
     .video {
         float: left;
@@ -333,8 +358,8 @@ input {
         overflow: hidden;
     }
     .video.two {
-        width: 100vw;
-        height: 50vh;
+        width: 50vw;
+        height: 25vh;
     }
     .video.three {
         width: 100vw;
@@ -349,4 +374,41 @@ input {
 
 #settings hr {
     opacity: 0.3;
+}
+
+#player {
+    position: absolute;
+    width: 93%;
+    height: 25vh;
+    margin: 20px;
+    border-radius: 20px;
+}
+
+.flip-btn {
+    display: flex;
+    position: fixed;
+    left: 20px;
+    top: 20px;
+    z-index: 99999999999999999999999999999;
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    background-color: #e0e0e0;
+    box-shadow: 5px 5px 15px #bebebe;
+    font-size: 25px;
+    text-align: center;
+    align-items: center;
+    flex-direction: column;
+    justify-content: center;
+}
+
+.flip-btn:hover {
+    background-color: #d1d1d1;
+    box-shadow: 20px 20px 60px #cccccc;
+}
+
+.underVideo-text {
+    position: relative;
+    top: 10px;
+    left: 20px;
 }

@@ -21,13 +21,27 @@
     <script defer src="vue.min.js"></script>
     <script defer src="app.js"></script>
     <script defer src="script.js"></script>
+    <script src="youtube.js"></script>
     <title>들어올래?</title>
-    <!-- Below line is an alytics script. Delete it if you are deploying it on your own cloud  -->
-    <script async defer src="https://stats.usetalk.io/hello.js"></script>
+    <script type="module" src="https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.esm.js"></script>
+    <script nomodule src="https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.js"></script>
+    <script src="https://code.jquery.com/jquery-2.2.1.min.js"></script>
+    <script src="https://www.youtube.com/iframe_api"></script>
+
 </head>
 
 <body>
-    <section id="videos"></section>
+
+    <div class="flip-btn" onclick="javascript:flipSection();" style="display:none;">
+        <ion-icon id="youtube-icon-btn" name="logo-youtube"></ion-icon>
+        <ion-icon id="video-icon-btn" name="videocam-outline"></ion-icon>
+    </div>
+
+    <section id="videos">
+    </section>
+    <section id="youtube-sec" style="display:none;">
+        <div id="player"></div>
+    </section>
     <main id="app" v-bind:style="'display:block'">
         <div id="intro" v-if="showIntro && !showChat && !showSettings">
             <p>
@@ -45,8 +59,8 @@
             </div>
         </div>
 
-        <div id="chatWrap" v-if="showChat">
-            <div id="chats">
+        <div id="chatWrap">
+            <div id="chats" ref="chats">
                 <div class="chat" v-for="(chat, i) in chats" v-bind:key="i">
                     <span class="name">{{chat.name}}</span>
                     <span class="date light"> &middot; {{formatDate(chat.date)}}</span>
@@ -58,6 +72,15 @@
                 <div id="placeholder" v-if="typing.length <= 0">입력 후 엔터키로 전송</div>
                 <div id="compose" contenteditable="true" v-on:keydown.enter="sendChat" v-on:input="edit($event)" v-on:paste="paste($event)"></div>
             </div>
+        </div>
+
+        <div id="youtubeWrap" v-if="showYoutubeSet">
+            <p>
+                <strong>Youtube</strong> 영상을 공유해보세요.
+            </p>
+            <input type="text" id="youtube-input" placeholder="링크 입력" v-on:keydown.enter="youtubeBtn" />
+            <button class="copy link" v-on:click="stopYoutubeShare" style='background:#e74c3c;border-radius:10px;color:white;padding:10px 10px;font-size:12px;width:auto;border:none;margin-top:10px;'>현재 공유중인 영상 공유 중지</button>
+
         </div>
 
         <div id="settings" v-if="showSettings">
@@ -85,16 +108,31 @@
             </div>
         </div>
 
-        <div id="actionsWrap" v-bind:class="hideToolbar ? 'hidden' : ''">
+        <div id="actionsWrap">
             <div id="actions">
                 <button v-bind:class="'icon-mic'+(audioEnabled ? '' : '-off')" v-on:click="audioToggle"></button>
                 <button v-bind:class="'icon-video'+(videoEnabled ? '' : '-off')" v-on:click="videoToggle"></button>
-                <button v-bind:class="'icon-message-square '+(showChat ? 'active' : '')" v-on:click="showChat = !showChat"></button>
-                <button v-bind:class="'icon-monitor '+(screenshareEnabled ? 'active' : '')" v-on:click="screenShareToggle"></button>
-                <button v-bind:class="'icon-more-horizontal '+(showSettings ? 'active' : '')" v-on:click="showSettings = !showSettings"></button>
+                <button v-bind:class="(showYoutubeSet ? 'active' : '')" v-on:click="showYoutubeSet = !showYoutubeSet;showChat = false;showSettings=false;"><img src="https://www.seekpng.com/png/full/21-215231_transparent-download-social-png-icon-free-download-number.png" style="width:23px;"></button>
+                <button v-bind:class="'icon-more-horizontal '+(showSettings ? 'active' : '')" v-on:click="showSettings = !showSettings;showChat = false;showYoutubeSet=false;"></button>
             </div>
         </div>
     </main>
 </body>
+
+<script>
+    function flipSection() {
+        if ($('#videos').css('display') === 'none') {
+            $('#youtube-sec').hide();
+            $('#videos').show();
+            $('#video-icon-btn').hide();
+            $('#youtube-icon-btn').show();
+        } else {
+            $('#youtube-sec').show();
+            $('#videos').hide();
+            $('#video-icon-btn').show();
+            $('#youtube-icon-btn').hide();
+        }
+    }
+</script>
 
 </html>
