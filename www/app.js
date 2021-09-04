@@ -69,9 +69,12 @@ const App = new Vue({
                     for (let peer_id in peers) {
                         const sender = peers[peer_id].getSenders().find((s) => (s.track ? s.track.kind === "video" : false));
                         sender.replaceTrack(screenStream.getVideoTracks()[0]);
+                        sender.replaceTrack(screenStream.getAudioTracks()[0]);
                     }
                     screenStream.getVideoTracks()[0].enabled = true;
-                    const newStream = new MediaStream([screenStream.getVideoTracks()[0], localMediaStream.getAudioTracks()[0]]);
+                    screenStream.getAudioTracks()[0].enabled = true;
+
+                    const newStream = new MediaStream([screenStream.getVideoTracks()[0], screenStream.getAudioTracks()[0]]);
                     localMediaStream = newStream;
                     attachMediaStream(document.getElementById("selfVideo"), newStream);
                     this.toggleSelfVideoMirror();

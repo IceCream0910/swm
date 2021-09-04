@@ -210,9 +210,15 @@ function setupLocalMedia(callback, errorback) {
                 App.audioDevices = devices.filter((device) => device.kind === "audioinput" && device.deviceId !== "default");
             });
         })
-        .catch(() => {
+        .catch((err) => {
             /* user denied access to a/v */
-            alert("마이크/카메라 접근 권한을 허용해주세요.");
+            if (err.name.includes('NotReadableError')) {
+                alert("다른 앱에서 마이크나 카메라를 사용중입니다. 다른 앱을 종료한 후 시도해주세요.");
+            } else {
+                alert("마이크/카메라 오류 : " + err.name + "-" + err.message);
+
+            }
+
             if (errorback) errorback();
         });
 }
