@@ -37,11 +37,7 @@
         <ion-icon id="video-icon-btn" name="videocam-outline"></ion-icon>
     </div>
 
-    <section id="videos">
-    </section>
-    <section id="youtube-sec" style="display:none;">
-        <div id="player"></div>
-    </section>
+
     <main id="app" v-bind:style="'display:block'">
         <div id="intro" v-if="showIntro && !showChat && !showSettings">
             <p>
@@ -60,13 +56,22 @@
         </div>
 
         <div id="chatWrap">
+            <div id="video-container">
+                <section id="videos">
+                </section>
+                <section id="youtube-sec" style="display:none;">
+                    <div id="player"></div>
+                </section>
+            </div>
+
             <div id="chats" ref="chats">
                 <div class="chat" v-for="(chat, i) in chats" v-bind:key="i">
                     <span class="name">{{chat.name}}</span>
                     <span class="date light"> &middot; {{formatDate(chat.date)}}</span>
                     <div class="message" v-html="linkify(chat.message)"></div>
                 </div>
-                <div id="noChat" class="light" v-if="!chats.length"><small>💬 메시지를 남겨보세요</small></div>
+                <div id="noChat" class="light" v-if="!chats.length" style="margin-top:30vh;"><small>💬 메시지를 남겨보세요</small></div>
+
             </div>
             <div id="composeBox">
                 <div id="placeholder" v-if="typing.length <= 0">입력 후 엔터키로 전송</div>

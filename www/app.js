@@ -101,11 +101,11 @@ const App = new Vue({
         },
         linkify: function(str) {
             if (str == '/1') {
-                return `<img src="https://blog.kakaocdn.net/dn/VzAMG/btqHR66WyUC/xkuXI9X1b5YGd7Nobr1g00/img.gif" style="width:50%;">`;
+                return `<img src="https://blog.kakaocdn.net/dn/VzAMG/btqHR66WyUC/xkuXI9X1b5YGd7Nobr1g00/img.gif" style="width:30%;">`;
             } else if (str == '/2') {
-                return `<img src="https://cdn.notefolio.net/img/93/c6/93c62f9d432b62cb5f3c96f2094f54f7da8e6313fac02c8b6dffff99fb0ac78c_v1.jpg" style="width:50%;">`;
+                return `<img src="https://cdn.notefolio.net/img/93/c6/93c62f9d432b62cb5f3c96f2094f54f7da8e6313fac02c8b6dffff99fb0ac78c_v1.jpg" style="width:30%;">`;
             } else if (str == '/3') {
-                return `<img src="https://www.hushwish.com/wp-content/uploads/2019/10/emo_asiana_009.gif" style="width:50%;">`;
+                return `<img src="https://www.hushwish.com/wp-content/uploads/2019/10/emo_asiana_009.gif" style="width:30%;">`;
             } else {
                 return this.sanitizeString(str).replace(/(?:(?:https?|ftp):\/\/)?[\w/\-?=%.]+\.[\w/\-?=%]+/gi, (match) => {
                     let displayURL = match
@@ -170,7 +170,7 @@ const App = new Vue({
                     this.showChat = true;
                     this.hideToolbar = false;
 
-                    this.chats.push(chatMessage.split('\n').join('<br>'));
+                    this.chats.push(chatMessage);
 
                     this.$nextTick(() => {
                         let messages = this.$refs.chats;
