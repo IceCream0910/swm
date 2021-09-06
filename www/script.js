@@ -259,12 +259,26 @@ const resizeVideos = () => {
     document.querySelectorAll("#videos .video").forEach((v) => {
         v.className = "video " + numToString[videos.length];
     });
+
+    $('#chats').css({ top: $('.video').outerHeight() + 30 + 'px' });
+    $('#chats').css({ height: $(window).height() - $('.video').outerHeight() - 100 + 'px' });
+
+
 };
 
+window.onresize = function(event) {
+    $('#chats').css({ top: $('.video').outerHeight() + 30 + 'px' });
+    $('#chats').css({ height: $(window).height() - $('.video').outerHeight() - 100 + 'px' });
+
+
+};
+
+/*
 document.body.addEventListener("click", () => {
     if (!App.showChat && !App.showSettings && !App.showIntro) {
         App.hideToolbar = !App.hideToolbar;
     }
 });
+*/
 
 window.onload = init;
