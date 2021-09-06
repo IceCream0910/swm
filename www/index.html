@@ -116,8 +116,8 @@
             <div id="actions">
                 <button v-bind:class="'icon-mic'+(audioEnabled ? '' : '-off')" v-on:click="audioToggle"></button>
                 <button v-bind:class="'icon-video'+(videoEnabled ? '' : '-off')" v-on:click="videoToggle"></button>
-                <button v-bind:class="(showYoutubeSet ? 'active' : '')" v-on:click="showYoutubeSet = !showYoutubeSet;showChat = false;showSettings=false;"><img src="https://www.seekpng.com/png/full/21-215231_transparent-download-social-png-icon-free-download-number.png" style="width:23px;"></button>
-                <button v-bind:class="'icon-more-horizontal '+(showSettings ? 'active' : '')" v-on:click="showSettings = !showSettings;showChat = false;showYoutubeSet=false;"></button>
+                <button v-bind:class="(showYoutubeSet ? 'active' : '')" v-on:click="showYoutubeSet = !showYoutubeSet;showSettings=false;"><img src="https://www.seekpng.com/png/full/21-215231_transparent-download-social-png-icon-free-download-number.png" style="width:23px;"></button>
+                <button v-bind:class="'icon-more-horizontal '+(showSettings ? 'active' : '')" v-on:click="showSettings = !showSettings;showYoutubeSet=false;"></button>
             </div>
         </div>
     </main>

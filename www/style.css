@@ -217,6 +217,10 @@ input {
     font-size: small;
 }
 
+.chatEmoji {
+    width: 10%;
+}
+
 #chatWrap #composeBox {
     position: fixed;
     bottom: 0;
@@ -382,6 +386,9 @@ input {
         transition: all 0.25s ease-out;
         opacity: 1;
         transform: translateY(0rem);
+    }
+    .chatEmoji {
+        width: 30%;
     }
 }
 

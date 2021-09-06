@@ -10,7 +10,7 @@ const App = new Vue({
         videoEnabled: true,
         screenshareEnabled: false,
         showIntro: true,
-        showChat: false,
+        showChat: true,
         showYoutubeSet: false,
         showSettings: false,
         hideToolbar: false,
@@ -101,11 +101,11 @@ const App = new Vue({
         },
         linkify: function(str) {
             if (str == '/1') {
-                return `<img src="https://blog.kakaocdn.net/dn/VzAMG/btqHR66WyUC/xkuXI9X1b5YGd7Nobr1g00/img.gif" style="width:30%;">`;
+                return `<img class="chatEmoji" src="https://blog.kakaocdn.net/dn/VzAMG/btqHR66WyUC/xkuXI9X1b5YGd7Nobr1g00/img.gif">`;
             } else if (str == '/2') {
-                return `<img src="https://cdn.notefolio.net/img/93/c6/93c62f9d432b62cb5f3c96f2094f54f7da8e6313fac02c8b6dffff99fb0ac78c_v1.jpg" style="width:30%;">`;
+                return `<img class="chatEmoji" src="https://cdn.notefolio.net/img/93/c6/93c62f9d432b62cb5f3c96f2094f54f7da8e6313fac02c8b6dffff99fb0ac78c_v1.jpg">`;
             } else if (str == '/3') {
-                return `<img src="https://www.hushwish.com/wp-content/uploads/2019/10/emo_asiana_009.gif" style="width:30%;">`;
+                return `<img class="chatEmoji" src="https://www.hushwish.com/wp-content/uploads/2019/10/emo_asiana_009.gif">`;
             } else {
                 return this.sanitizeString(str).replace(/(?:(?:https?|ftp):\/\/)?[\w/\-?=%.]+\.[\w/\-?=%]+/gi, (match) => {
                     let displayURL = match
