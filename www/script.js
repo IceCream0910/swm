@@ -260,25 +260,53 @@ const resizeVideos = () => {
         v.className = "video " + numToString[videos.length];
     });
 
-    $('#chats').css({ top: $('.video').outerHeight() + 30 + 'px' });
-    $('#chats').css({ height: $(window).height() - $('.video').outerHeight() - 100 + 'px' });
+    var windowWidth = window.matchMedia("screen and (max-width: 960px)");
+    if (windowWidth.matches) {
+        console.log('m');
+        $('#player').css({
+            width: '87%',
+            height: '25vh'
+        });
+
+        $('#chats').css({ top: $('.video').outerHeight() + 30 + 'px' });
+        $('#chats').css({ height: $(window).height() - $('.video').outerHeight() - 100 + 'px' });
+    } else {
+        console.log('p');
+        $('#player').css({
+            width: '65%',
+            height: '50vh'
+        });
+    }
+
+
+
 
 
 };
 
 window.onresize = function(event) {
-    $('#chats').css({ top: $('.video').outerHeight() + 30 + 'px' });
-    $('#chats').css({ height: $(window).height() - $('.video').outerHeight() - 100 + 'px' });
+    var windowWidth = window.matchMedia("screen and (max-width: 960px)");
+    if (windowWidth.matches) {
+        $('#chats').css({ position: 'absolute', width: '100%', height: '70%' });
 
+        $('#chats').css({ top: $('.video').outerHeight() + 30 + 'px' });
+        $('#chats').css({ height: $(window).height() - $('.video').outerHeight() - 100 + 'px' });
+    } else {
+        $('#chats').css({ position: 'fixed', top: '20px', right: '0', width: '30%', height: '87%' });
+
+    }
 
 };
 
 /*
-document.body.addEventListener("click", () => {
-    if (!App.showChat && !App.showSettings && !App.showIntro) {
-        App.hideToolbar = !App.hideToolbar;
-    }
-});
+ position: absolute;
+        top: 30vh;
+        word-break: break-all;
+        overflow-y: auto;
+        overflow-x: hidden;
+        width: 100%;
+        height: 70%;
+        background: transparent;
 */
 
 window.onload = init;

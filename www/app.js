@@ -19,6 +19,7 @@ const App = new Vue({
         name: window.localStorage.name || "",
         typing: "",
         chats: [],
+        player: "",
     },
     computed: {},
     methods: {
@@ -148,7 +149,7 @@ const App = new Vue({
                 if (this.typing == '/이모티콘') {
                     const chatMessage = {
                         type: "chat",
-                        name: "마르크스",
+                        name: "서버에 서식중인 메테르니히",
                         message: '/1 : 윙크\n/2 : 울음\n/3 : 노노\n', //이모티콘 리스트 도움말
                         date: new Date().toISOString(),
                     };
@@ -178,7 +179,7 @@ const App = new Vue({
                     });
                     break;
                 case "youtube":
-                    var player;
+
 
                     function onYouTubeIframeAPIReady(id) {
                         console.log(id);
@@ -188,12 +189,17 @@ const App = new Vue({
                             playerVars: { 'autoplay': 1, 'playsinline': 1 },
                             events: { 'onReady': onPlayerReady, 'onStateChange': onPlayerStateChange }
                         });
+
+
                     }
 
                     function onPlayerReady(e) {
                         e.target.mute();
                         e.target.playVideo();
-
+                        resizeVideos();
+                        setTimeout(function() {
+                            e.target.unMute();
+                        }, 3000);
                     }
 
                     // when video ends
@@ -209,15 +215,22 @@ const App = new Vue({
                     $('#youtubeWrap').hide();
                     var y_id = (chatMessage.message).replace('Youtube 영상 공유 : ', '');
                     console.log(y_id);
+
                     onYouTubeIframeAPIReady(y_id);
                     $('#videos').hide();
                     $('#youtube-sec').show();
                     $('.flip-btn').show();
                     $('#video-icon-btn').show();
                     $('#youtube-icon-btn').hide();
+
+                    this.chats.push(chatMessage);
+                    this.$nextTick(() => {
+                        let messages = this.$refs.chats;
+                        chats.scrollTo({ top: chats.scrollHeight, behavior: 'smooth' });
+                    });
                     break;
                 case "youtube_shareStop":
-                    $('#player').attr('src', '');
+                    player.pauseVideo();
                     $('#videos').show();
                     $('#youtube-sec').hide();
                     $('.flip-btn').hide();
@@ -250,11 +263,16 @@ const App = new Vue({
             const chatMessage = {
                 type: "youtube_shareStop",
                 name: this.name || "이름없음",
-                message: 'Youtube 영상 공유 종료',
+                message: 'Youtube 공유 종료',
                 date: new Date().toISOString(),
             };
             this.chats.push(chatMessage);
             Object.keys(dataChannels).map((peer_id) => dataChannels[peer_id].send(JSON.stringify(chatMessage)));
+            this.$nextTick(() => {
+                let messages = this.$refs.chats;
+                chats.scrollTo({ top: chats.scrollHeight, behavior: 'smooth' });
+            });
+            player.pauseVideo();
             $('#videos').show();
             $('#youtube-sec').hide();
             $('.flip-btn').hide();
@@ -262,8 +280,6 @@ const App = new Vue({
             $('#youtube-icon-btn').hide();
         },
         youtubeBtn: function(e) {
-            var player;
-
             function onYouTubeIframeAPIReady(id) {
                 console.log(id);
                 player = new YT.Player('player', {
@@ -277,6 +293,10 @@ const App = new Vue({
             function onPlayerReady(e) {
                 e.target.mute();
                 e.target.playVideo();
+                resizeVideos();
+                setTimeout(function() {
+                    e.target.unMute();
+                }, 1000);
 
             }
 
@@ -325,6 +345,10 @@ const App = new Vue({
                     };
                     this.chats.push(chatMessage);
                     Object.keys(dataChannels).map((peer_id) => dataChannels[peer_id].send(JSON.stringify(chatMessage)));
+                    this.$nextTick(() => {
+                        let messages = this.$refs.chats;
+                        chats.scrollTo({ top: chats.scrollHeight, behavior: 'smooth' });
+                    });
                 }
             }
         },
