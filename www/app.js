@@ -20,6 +20,7 @@ const App = new Vue({
         typing: "",
         chats: [],
         player: "",
+        isYoutubeHost: false,
     },
     computed: {},
     methods: {
@@ -62,7 +63,7 @@ const App = new Vue({
                         const sender = peers[peer_id].getSenders().find((s) => (s.track ? s.track.kind === "video" : false));
                         sender.replaceTrack(camStream.getVideoTracks()[0]);
                     }
-                    camStream.getVideoTracks()[0].enabled = true;
+                    camStream.getVideoTracks()[0].enabled = this.videoEnabled;
 
                     const newStream = new MediaStream([camStream.getVideoTracks()[0], localMediaStream.getAudioTracks()[0]]);
                     localMediaStream = newStream;
@@ -71,7 +72,7 @@ const App = new Vue({
                 })
                 .catch((err) => {
                     console.log(err);
-                    alert("카메라를 불러오지 못했어요. 다른 카메라를 선택해보세요.");
+                    render("danger", "카메라를 불러오지 못했어요. 다른 카메라를 선택해보세요.", 4500);
                 });
         },
         changeMicrophone: function(deviceId) {
@@ -82,7 +83,7 @@ const App = new Vue({
                         const sender = peers[peer_id].getSenders().find((s) => (s.track ? s.track.kind === "audio" : false));
                         sender.replaceTrack(micStream.getAudioTracks()[0]);
                     }
-                    micStream.getAudioTracks()[0].enabled = true;
+                    micStream.getAudioTracks()[0].enabled = this.audioEnabled;
 
                     const newStream = new MediaStream([localMediaStream.getVideoTracks()[0], micStream.getAudioTracks()[0]]);
                     localMediaStream = newStream;
@@ -91,7 +92,7 @@ const App = new Vue({
                 })
                 .catch((err) => {
                     console.log(err);
-                    alert("마이크를 불러오지 못했어요. 다른 마이크를 선택해보세요.");
+                    render("danger", "마이크를 불러오지 못했어요. 다른 마이크를 선택해보세요.", 4500);
                 });
         },
         sanitizeString: function(str) {
@@ -163,6 +164,9 @@ const App = new Vue({
                 this.typing = "";
                 composeElement.textContent = "";
                 composeElement.blur;
+                var audio = new Audio('tone/message.mp3');
+                audio.volume = 0.2;
+                audio.play();
             }
         },
         handleIncomingDataChannelMessage: function(chatMessage) {
@@ -176,52 +180,28 @@ const App = new Vue({
                     this.$nextTick(() => {
                         let messages = this.$refs.chats;
                         chats.scrollTo({ top: chats.scrollHeight, behavior: 'smooth' });
+                        var audio = new Audio('tone/message.mp3');
+                        audio.volume = 0.2;
+                        audio.play();
                     });
                     break;
                 case "youtube":
-
-
-                    function onYouTubeIframeAPIReady(id) {
-                        console.log(id);
-                        player = new YT.Player('player', {
-                            width: '100%',
-                            videoId: id,
-                            playerVars: { 'autoplay': 1, 'playsinline': 1 },
-                            events: { 'onReady': onPlayerReady, 'onStateChange': onPlayerStateChange }
-                        });
-
-
-                    }
-
-                    function onPlayerReady(e) {
-                        e.target.mute();
-                        e.target.playVideo();
-                        resizeVideos();
-                        setTimeout(function() {
-                            e.target.unMute();
-                        }, 3000);
-                    }
-
-                    // when video ends
-                    function onPlayerStateChange(event) {
-                        if (event.data === 0) {
-                            $('#videos').show();
-                            $('#youtube-sec').hide();
-                            $('.flip-btn').hide();
-                            $('#video-icon-btn').show();
-                            $('#youtube-icon-btn').hide();
-                        }
-                    }
+                    isYoutubeHost = false;
                     $('#youtubeWrap').hide();
                     var y_id = (chatMessage.message).replace('Youtube 영상 공유 : ', '');
                     console.log(y_id);
 
-                    onYouTubeIframeAPIReady(y_id);
+                    this.playYoutube(y_id);
                     $('#videos').hide();
                     $('#youtube-sec').show();
                     $('.flip-btn').show();
                     $('#video-icon-btn').show();
                     $('#youtube-icon-btn').hide();
+
+                    chatMessage.message = "Youtube 영상을 공유했어요.";
+                    render('success', "Youtube 영상을 공유받았어요. 공유자의 영상 시간이 동기화됩니다.", 5500);
+                    var audio = new Audio('tone/start-share.mp3');
+                    audio.play();
 
                     this.chats.push(chatMessage);
                     this.$nextTick(() => {
@@ -236,11 +216,35 @@ const App = new Vue({
                     $('.flip-btn').hide();
                     $('#video-icon-btn').show();
                     $('#youtube-icon-btn').hide();
+                    var audio = new Audio('tone/stop-share.mp3');
+                    audio.play();
                     this.chats.push(chatMessage);
                     this.$nextTick(() => {
                         let messages = this.$refs.chats;
                         chats.scrollTo({ top: chats.scrollHeight, behavior: 'smooth' });
                     });
+                    break;
+                case "youtube_signal":
+                    if (chatMessage.message == 'pause') {
+                        player.pauseVideo();
+                    } else if (chatMessage.message == 'play') {
+                        player.playVideo();
+                    } else if (chatMessage.message == 'finish') {
+                        player.pauseVideo();
+                        $('#videos').show();
+                        $('#youtube-sec').hide();
+                        $('.flip-btn').hide();
+                        $('#video-icon-btn').show();
+                        $('#youtube-icon-btn').hide();
+                    }
+                    break;
+                case "youtube_syncTime":
+                    var counterTime = chatMessage.message;
+                    var myTime = player.getCurrentTime();
+                    if (Math.abs(counterTime - myTime) >= 5) {
+                        player.seekTo(counterTime);
+                        player.playVideo();
+                    }
                     break;
                 default:
                     break;
@@ -258,12 +262,11 @@ const App = new Vue({
             );
         },
         stopYoutubeShare: function() {
-            $('#player').attr('src', '');
             //youtube 공유 전달
             const chatMessage = {
                 type: "youtube_shareStop",
                 name: this.name || "이름없음",
-                message: 'Youtube 공유 종료',
+                message: 'Youtube 공유를 종료했어요.',
                 date: new Date().toISOString(),
             };
             this.chats.push(chatMessage);
@@ -278,58 +281,20 @@ const App = new Vue({
             $('.flip-btn').hide();
             $('#video-icon-btn').show();
             $('#youtube-icon-btn').hide();
+            var audio = new Audio('tone/stop-share.mp3');
+            audio.play();
         },
         youtubeBtn: function(e) {
-            function onYouTubeIframeAPIReady(id) {
-                console.log(id);
-                player = new YT.Player('player', {
-                    width: '100%',
-                    videoId: id,
-                    playerVars: { 'autoplay': 1, 'playsinline': 1 },
-                    events: { 'onReady': onPlayerReady, 'onStateChange': onPlayerStateChange }
-                });
-            }
 
-            function onPlayerReady(e) {
-                e.target.mute();
-                e.target.playVideo();
-                resizeVideos();
-                setTimeout(function() {
-                    e.target.unMute();
-                }, 1000);
-
-            }
-
-            // when video ends
-            function onPlayerStateChange(event) {
-                if (event.data === 0) {
-                    $('#videos').show();
-                    $('#youtube-sec').hide();
-                    $('.flip-btn').hide();
-                    $('#video-icon-btn').show();
-                    $('#youtube-icon-btn').hide();
-                }
-            }
-
-            function youtubeId(url) {
-                var tag = "";
-                if (url) {
-                    var regExp = /^.*((youtu.be\/)|(v\/)|(\/u\/\w\/)|(embed\/)|(watch\?))\??v?=?([^#\&\?]*).*/;
-                    var matchs = url.match(regExp);
-                    if (matchs) {
-                        tag += matchs[7];
-                    }
-                    return tag;
-                }
-            }
             e.stopPropagation();
             e.preventDefault();
             var input = $('#youtube-input').val();
             if (input.length) {
-                var y_id = youtubeId(input);
+                var y_id = this.youtubeId(input);
                 if (input) {
                     $('#youtubeWrap').hide();
-                    onYouTubeIframeAPIReady(y_id);
+                    showYoutubeSet = false;
+                    this.playYoutube(y_id);
                     $('#videos').hide();
                     $('#youtube-sec').show();
                     $('.flip-btn').show();
@@ -337,14 +302,19 @@ const App = new Vue({
                     $('#youtube-icon-btn').hide();
 
                     //youtube 공유 전달
+                    isYoutubeHost = true;
                     const chatMessage = {
                         type: "youtube",
                         name: this.name || "이름없음",
                         message: 'Youtube 영상 공유 : ' + y_id,
                         date: new Date().toISOString(),
                     };
-                    this.chats.push(chatMessage);
                     Object.keys(dataChannels).map((peer_id) => dataChannels[peer_id].send(JSON.stringify(chatMessage)));
+                    chatMessage.message = "Youtube 영상을 공유했어요.";
+                    render('success', "Youtube 영상을 공유했어요. " + this.name + "님의 영상 시간이 상대에게 동기화됩니다.", 6000);
+                    var audio = new Audio('tone/start-share.mp3');
+                    audio.play();
+                    this.chats.push(chatMessage);
                     this.$nextTick(() => {
                         let messages = this.$refs.chats;
                         chats.scrollTo({ top: chats.scrollHeight, behavior: 'smooth' });
@@ -352,5 +322,103 @@ const App = new Vue({
                 }
             }
         },
+        youtubeId: function(url) {
+            var tag = "";
+            if (url) {
+                var regExp = /^.*((youtu.be\/)|(v\/)|(\/u\/\w\/)|(embed\/)|(watch\?))\??v?=?([^#\&\?]*).*/;
+                var matchs = url.match(regExp);
+                if (matchs) {
+                    tag += matchs[7];
+                }
+                return tag;
+            }
+        },
+        playYoutube: function(vid) {
+            console.log(vid);
+            player.loadVideoById(vid, 0, "default");
+        },
+        pauseYoutube: function() {
+            player.pauseVideo();
+        },
+    },
+    mounted() {
+        this.$nextTick(function() {
+            window.YT.ready(function() {
+                player = new YT.Player('player', {
+                    width: '100%',
+                    videoId: '1SLr62VBBjw',
+                    playerVars: {
+                        'autoplay': 1,
+                        'playsinline': 1,
+                    },
+                    events: { 'onReady': onPlayerReady, 'onStateChange': onPlayerStateChange }
+                });
+
+                function onPlayerReady(e) {
+
+                    e.target.mute();
+                    e.target.playVideo();
+                    resizeVideos();
+                    setTimeout(function() {
+                        e.target.unMute();
+                        player.playVideo();
+                    }, 1000);
+
+                }
+
+
+                playAlert = setInterval(function() {
+                    console.log(this.isYoutubeHost);
+                    if (this.isYoutubeHost) {
+                        const chatMessage = {
+                            type: "youtube_syncTime",
+                            name: this.name || "이름없음",
+                            message: player.getCurrentTime(),
+                            date: new Date().toISOString(),
+                        };
+                        Object.keys(dataChannels).map((peer_id) => dataChannels[peer_id].send(JSON.stringify(chatMessage)));
+                    }
+                }, 1000);
+
+                // video 상태 동기화
+                function onPlayerStateChange(event) {
+                    if (event.data === 0) {
+                        $('#videos').show();
+                        $('#youtube-sec').hide();
+                        $('.flip-btn').hide();
+                        $('#video-icon-btn').show();
+                        $('#youtube-icon-btn').hide();
+                        const chatMessage = {
+                            type: "youtube_signal",
+                            name: this.name || "이름없음",
+                            message: 'finish',
+                            date: new Date().toISOString(),
+                        };
+                        Object.keys(dataChannels).map((peer_id) => dataChannels[peer_id].send(JSON.stringify(chatMessage)));
+                    } else if (event.data === 2) {
+                        const chatMessage = {
+                            type: "youtube_signal",
+                            name: this.name || "이름없음",
+                            message: 'pause',
+                            date: new Date().toISOString(),
+                        };
+                        Object.keys(dataChannels).map((peer_id) => dataChannels[peer_id].send(JSON.stringify(chatMessage)));
+
+                    } else if (event.data === 1) {
+                        const chatMessage = {
+                            type: "youtube_signal",
+                            name: this.name || "이름없음",
+                            message: 'play',
+                            date: new Date().toISOString(),
+                        };
+                        Object.keys(dataChannels).map((peer_id) => dataChannels[peer_id].send(JSON.stringify(chatMessage)));
+
+                    }
+
+                }
+            });
+        })
+
+
     },
 });

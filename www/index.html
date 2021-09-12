@@ -16,7 +16,10 @@
     <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png" />
     <link rel="icon" href="/favicon.svg" />
     <link rel="stylesheet" href="/style.css" />
+
     <script defer src="https://webrtc.github.io/adapter/adapter-latest.js"></script>
+
+
     <script defer src="/socket.io/socket.io.js"></script>
     <script defer src="vue.min.js"></script>
     <script defer src="app.js"></script>
@@ -28,6 +31,7 @@
     <script src="https://code.jquery.com/jquery-2.2.1.min.js"></script>
     <script src="https://www.youtube.com/iframe_api"></script>
 
+    <div class="msg animate slide-in-down"></div>
 </head>
 
 <body>
@@ -88,6 +92,8 @@
         </div>
 
         <div id="settings" v-if="showSettings">
+            <div class="copy link" v-on:click="copyURL">효과음 음소거</div>
+            <hr>
             <div class="label">카메라 📹</div>
             <div v-for="(videoDevice, i) in videoDevices" v-bind:key="videoDevice.deviceId">
                 <div v-bind:class="'link '+(selectedVideoDeviceId === videoDevice.deviceId ? 'active' : '')" v-on:click="changeCamera(videoDevice.deviceId)">
@@ -103,7 +109,7 @@
             </div>
             <hr>
             <div class="label">이름 설정</div>
-            <input type="text" placeholder="이름을 입력해주세요." v-model="name" v-on:keyup="nameToLocalStorage" />
+            <input type="text" id="name-set" placeholder="이름을 입력해주세요." v-model="name" v-on:keyup="nameToLocalStorage" />
             <hr>
             <div class="copy link" v-on:click="copyURL">{{copyText || "초대 링크 복사"}}</div>
             <div class="copy link" v-on:click="toggleSelfVideoMirror">

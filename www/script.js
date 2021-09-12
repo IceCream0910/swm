@@ -44,7 +44,6 @@ let peerMediaElements = {}; /* keep track of our <video>/<audio> tags, indexed b
 let dataChannels = {};
 
 function init() {
-
     App.roomLink = `${APP_URL}/${ROOM_ID}`;
 
     signalingSocket = io(APP_URL);
@@ -55,6 +54,7 @@ function init() {
         else
             setupLocalMedia(function() {
                 joinChatChannel(ROOM_ID, {});
+                render('success', "환영합니다 :)", 3000);
             });
     });
     signalingSocket.on("disconnect", function() {
@@ -93,6 +93,9 @@ function init() {
             }
         };
         peerConnection.onaddstream = function(event) {
+            render('info', "상대방이 참여했습니다", 3000);
+            var audio = new Audio('tone/join.mp3');
+            audio.play();
             const remoteMedia = getVideoElement(peer_id);
             peerMediaElements[peer_id] = remoteMedia;
             attachMediaStream(remoteMedia, event.stream);
@@ -173,6 +176,7 @@ function init() {
     });
 
     signalingSocket.on("removePeer", function(config) {
+        render('warning', "상대방이 나갔습니다", 3000);
         const peer_id = config.peer_id;
         if (peer_id in peerMediaElements) {
             document.getElementById("videos").removeChild(peerMediaElements[peer_id].parentNode);
@@ -211,9 +215,9 @@ function setupLocalMedia(callback, errorback) {
         .catch((err) => {
             /* user denied access to a/v */
             if (err.name.includes('NotReadableError')) {
-                alert("다른 앱에서 마이크나 카메라를 사용중입니다. 다른 앱을 종료한 후 시도해주세요.");
+                render('danger', "다른 앱에서 마이크나 카메라를 사용중입니다. 다른 앱을 종료한 후 시도해주세요.", 4500);
             } else {
-                alert("마이크/카메라 오류 : " + err.name + "-" + err.message);
+                render('danger', "마이크/카메라 오류 : " + err.name + "-" + err.message, 4000);
 
             }
 
@@ -281,7 +285,6 @@ const resizeVideos = () => {
 
 
 
-
 };
 
 window.onresize = function(event) {
@@ -298,15 +301,53 @@ window.onresize = function(event) {
 
 };
 
-/*
- position: absolute;
-        top: 30vh;
-        word-break: break-all;
-        overflow-y: auto;
-        overflow-x: hidden;
-        width: 100%;
-        height: 70%;
-        background: transparent;
-*/
-
 window.onload = init;
+
+
+// data
+var clear;
+var msgDuration = 3000;
+var $msgSuccess = 'Great job! Well done :)';
+var $msgDanger = 'Careful with that!';
+var $msgWarning = 'Try that again and see what happens';
+var $msgInfo = 'This is a friendly reminder';
+// cache DOM
+var $msg = $('.msg');
+var $btnSuccess = $('.btn-success');
+var $btnDanger = $('.btn-danger');
+var $btnWarning = $('.btn-warning');
+var $btnInfo = $('.btn-info');
+
+// render message
+function render(type, message, duration) {
+
+    msgDuration = duration;
+    hide();
+
+    switch (type) {
+        case 'success':
+            $msg.addClass('msg-success active').text(message);
+            break;
+        case 'danger':
+            $msg.addClass('msg-danger active').text(message);
+            break;
+        case 'warning':
+            $msg.addClass('msg-warning active').text(message);
+            break;
+        case 'info':
+            $msg.addClass('msg-info active').text(message);
+            break;
+    }
+    timer()
+}
+
+function timer() {
+    clearTimeout(clear);
+    clear = setTimeout(function() {
+        hide();
+    }, msgDuration)
+}
+
+function hide() {
+    $msg.removeClass('msg-success msg-danger msg-warning msg-info active');
+}
