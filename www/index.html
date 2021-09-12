@@ -92,8 +92,6 @@
         </div>
 
         <div id="settings" v-if="showSettings">
-            <div class="copy link" v-on:click="copyURL">효과음 음소거</div>
-            <hr>
             <div class="label">카메라 📹</div>
             <div v-for="(videoDevice, i) in videoDevices" v-bind:key="videoDevice.deviceId">
                 <div v-bind:class="'link '+(selectedVideoDeviceId === videoDevice.deviceId ? 'active' : '')" v-on:click="changeCamera(videoDevice.deviceId)">
