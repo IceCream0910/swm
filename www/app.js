@@ -160,6 +160,32 @@ const App = new Vue({
                         chats.scrollTo({ top: chats.scrollHeight, behavior: 'smooth' });
                     });
                     Object.keys(dataChannels).map((peer_id) => dataChannels[peer_id].send(JSON.stringify(chatMessage)));
+                } else if (this.typing == '/불꽃놀이') {
+                    $(".pyro").show();
+                    setTimeout(function() {
+                        $(".pyro").hide();
+                    }, 5000);
+                } else if (this.typing == '/눈뽕') {
+                    var timer = setInterval(setColor, 10);
+                    setTimeout(stopColor, 1500);
+
+                    function setColor() {
+                        var x = document.getElementById("chats");
+
+                        if (x.style.backgroundColor == 'rgb(255, 255, 255)') {
+                            x.style.backgroundColor = 'rgb(0, 0, 0)';
+                        } else {
+                            x.style.backgroundColor = 'rgb(255, 255, 255)';
+                        }
+
+                    }
+
+                    function stopColor() {
+                        var x = document.getElementById("chats");
+
+                        clearInterval(timer);
+                        x.style.backgroundColor = 'transparent';
+                    }
                 }
                 this.typing = "";
                 composeElement.textContent = "";
@@ -176,7 +202,24 @@ const App = new Vue({
                     this.hideToolbar = false;
 
                     this.chats.push(chatMessage);
+                    if (chatMessage.message == '/불꽃놀이') {
+                        $(".pyro").show();
+                        setTimeout(function() {
+                            $(".pyro").hide();
+                        }, 5000);
+                    } else if (chatMessage.message == '/눈뽕') {
+                        var timer = setInterval(setColor, 1000);
+                        setTimeout(stopColor, 3000);
 
+                        function setColor() {
+                            var x = document.body;
+                            x.style.backgroundColor = x.style.backgroundColor == 'red' ? 'blue' : 'red';
+                        }
+
+                        function stopColor() {
+                            clearInterval(timer);
+                        }
+                    }
                     this.$nextTick(() => {
                         let messages = this.$refs.chats;
                         chats.scrollTo({ top: chats.scrollHeight, behavior: 'smooth' });

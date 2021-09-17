@@ -16,6 +16,8 @@
     <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png" />
     <link rel="icon" href="/favicon.svg" />
     <link rel="stylesheet" href="/style.css" />
+    <link rel="stylesheet" href="/fireworks.css" />
+
 
     <script defer src="https://webrtc.github.io/adapter/adapter-latest.js"></script>
 
@@ -39,6 +41,11 @@
     <div class="fixed-btn flip-btn" onclick="javascript:flipSection();" style="display:none;">
         <ion-icon id="youtube-icon-btn" name="logo-youtube"></ion-icon>
         <ion-icon id="video-icon-btn" name="videocam-outline"></ion-icon>
+    </div>
+
+    <div class="pyro" style="display:none;">
+        <div class="before"></div>
+        <div class="after"></div>
     </div>
 
     <main id="app" v-bind:style="'display:block'">
