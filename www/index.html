@@ -82,37 +82,62 @@
             </div>
         </div>
 
-        <div id="youtubeWrap" v-if="showYoutubeSet">
-            <p>
-                <strong>Youtube</strong> 영상을 공유해보세요.
-            </p>
-            <input type="text" id="youtube-input" placeholder="링크 입력" v-on:keydown.enter="youtubeBtn" />
-            <button class="copy link" v-on:click="stopYoutubeShare" style='background:#e74c3c;border-radius:10px;color:white;padding:10px 10px;font-size:12px;width:auto;border:none;margin-top:10px;'>현재 공유중인 영상 공유 중지</button>
+        <div class="overlay" id="youtubeWrap" v-if="showYoutubeSet">
+            <div class="modal">
+                <p>
+                    <strong>Youtube</strong> 영상 공유
+                </p>
+
+                <script src="https://apis.google.com/js/client.js?onload=googleApiClientReady">
+                </script>
+
+                <div class="col-md-5">
+                    <div class="input-group">
+                        <input type="text" id="youtube-input" placeholder="검색어나 링크 입력" v-on:keydown.enter="youtubeBtn" />
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-12">
+                        <div id="results"></div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md12 pull-right nextpr">
+                        <button type="button" id="prev" onclick="prevB()" class="btn btn-danger">Previous</button>
+                        <button type="button" id="next" onclick="nextB()" class="btn btn-danger">Next</button>
+                    </div>
+                </div>
+
+                <button class="copy link" v-on:click="stopYoutubeShare" style='background:#e74c3c;border-radius:10px;color:white;padding:10px 10px;font-size:12px;width:auto;border:none;margin-top:10px;'>현재 공유중인 영상 공유 중지</button>
+
+            </div>
 
         </div>
 
-        <div id="settings" v-if="showSettings">
-            <div class="label">카메라 📹</div>
-            <div v-for="(videoDevice, i) in videoDevices" v-bind:key="videoDevice.deviceId">
-                <div v-bind:class="'link '+(selectedVideoDeviceId === videoDevice.deviceId ? 'active' : '')" v-on:click="changeCamera(videoDevice.deviceId)">
-                    {{videoDevice.label}}
+        <div class="overlay" id="settings" v-if="showSettings">
+            <div class="modal">
+                <div class="label">카메라 📹</div>
+                <div v-for="(videoDevice, i) in videoDevices" v-bind:key="videoDevice.deviceId">
+                    <div v-bind:class="'link '+(selectedVideoDeviceId === videoDevice.deviceId ? 'active' : '')" v-on:click="changeCamera(videoDevice.deviceId)">
+                        {{videoDevice.label}}
+                    </div>
                 </div>
-            </div>
-            <hr>
-            <div class="label">마이크 🎙️</div>
-            <div v-for="(audioDevice, i) in audioDevices" v-bind:key="audioDevice.deviceId">
-                <div v-bind:class="'link '+(selectedAudioDeviceId === audioDevice.deviceId ? 'active' : '')" v-on:click="changeMicrophone(audioDevice.deviceId)">
-                    {{audioDevice.label}}
+                <hr>
+                <div class="label">마이크 🎙️</div>
+                <div v-for="(audioDevice, i) in audioDevices" v-bind:key="audioDevice.deviceId">
+                    <div v-bind:class="'link '+(selectedAudioDeviceId === audioDevice.deviceId ? 'active' : '')" v-on:click="changeMicrophone(audioDevice.deviceId)">
+                        {{audioDevice.label}}
+                    </div>
                 </div>
-            </div>
-            <hr>
-            <div class="label">이름 설정</div>
-            <input type="text" id="name-set" placeholder="이름을 입력해주세요." v-model="name" v-on:keyup="nameToLocalStorage" />
-            <hr>
-            <div class="copy link" v-on:click="copyURL">{{copyText || "초대 링크 복사"}}</div>
-            <div class="copy link" v-on:click="toggleSelfVideoMirror">
-                카메라 좌우반전
-                <small class="light">(나에게만 적용)</small>
+                <hr>
+                <div class="label">이름 설정</div>
+                <input type="text" id="name-set" placeholder="이름을 입력해주세요." v-model="name" v-on:keyup="nameToLocalStorage" />
+                <hr>
+                <div class="copy link" v-on:click="copyURL">{{copyText || "초대 링크 복사"}}</div>
+                <div class="copy link" v-on:click="toggleSelfVideoMirror">
+                    카메라 좌우반전
+                    <small class="light">(나에게만 적용)</small>
+                </div>
             </div>
         </div>
 

@@ -301,6 +301,10 @@ window.onresize = function(event) {
 
 };
 
+$('.close-modal').click(function() {
+    $('.modal-overlay, .modal').removeClass('active');
+});
+
 window.onload = init;
 
 

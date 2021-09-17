@@ -291,7 +291,7 @@ const App = new Vue({
             var input = $('#youtube-input').val();
             if (input.length) {
                 var y_id = this.youtubeId(input);
-                if (input) {
+                if (y_id) { //링크로 입력됨
                     $('#youtubeWrap').hide();
                     showYoutubeSet = false;
                     this.playYoutube(y_id);
@@ -319,6 +319,8 @@ const App = new Vue({
                         let messages = this.$refs.chats;
                         chats.scrollTo({ top: chats.scrollHeight, behavior: 'smooth' });
                     });
+                } else { //검색어 입력됨
+                    keyWordsearch();
                 }
             }
         },
@@ -331,6 +333,37 @@ const App = new Vue({
                     tag += matchs[7];
                 }
                 return tag;
+            }
+        },
+        searchedYoutubeClick: function(vid) {
+            if (vid) {
+                $('#youtubeWrap').hide();
+                showYoutubeSet = false;
+                this.playYoutube(vid);
+                $('#videos').hide();
+                $('#youtube-sec').show();
+                $('.flip-btn').show();
+                $('#video-icon-btn').show();
+                $('#youtube-icon-btn').hide();
+
+                //youtube 공유 전달
+                isYoutubeHost = true;
+                const chatMessage = {
+                    type: "youtube",
+                    name: this.name || "이름없음",
+                    message: 'Youtube 영상 공유 : ' + vid,
+                    date: new Date().toISOString(),
+                };
+                Object.keys(dataChannels).map((peer_id) => dataChannels[peer_id].send(JSON.stringify(chatMessage)));
+                chatMessage.message = "Youtube 영상을 공유했어요.";
+                render('success', "Youtube 영상을 공유했어요. " + this.name + "님의 영상 시간이 상대에게 동기화됩니다.", 6000);
+                var audio = new Audio('tone/start-share.mp3');
+                audio.play();
+                this.chats.push(chatMessage);
+                this.$nextTick(() => {
+                    let messages = this.$refs.chats;
+                    chats.scrollTo({ top: chats.scrollHeight, behavior: 'smooth' });
+                });
             }
         },
         playYoutube: function(vid) {

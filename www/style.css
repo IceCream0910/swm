@@ -173,21 +173,6 @@ input {
     border-radius: 1rem;
 }
 
-#youtubeWrap {
-    background: #fff;
-    position: fixed;
-    bottom: 6rem;
-    left: 0px;
-    right: 0px;
-    z-index: 100;
-    width: 18rem;
-    margin: auto;
-    padding: 1rem;
-    box-sizing: border-box;
-    border-radius: 1rem;
-    box-shadow: 0px 5px 15px rgba(0, 0, 0, 0.16), 0px 1px 4px rgba(0, 0, 0, 0.16);
-}
-
 #chatWrap #chats {
     position: fixed;
     top: 20px;
@@ -252,9 +237,31 @@ input {
     text-align: center;
 }
 
-#settings {
-    background: rgba(255, 255, 255, 0.9);
-    box-shadow: 0px 5px 15px rgba(0, 0, 0, 0.16), 0px 1px 4px rgba(0, 0, 0, 0.16);
+.overlay {
+    position: fixed;
+    /* Stay in place */
+    z-index: 1;
+    /* Sit on top */
+    left: 0;
+    top: 0;
+    width: 100%;
+    /* Full width */
+    height: 100%;
+    /* Full height */
+    overflow: auto;
+    /* Enable scroll if needed */
+    background-color: rgb(0, 0, 0);
+    /* Fallback color */
+    background-color: rgba(0, 0, 0, 0.4);
+    /* Black w/ opacity */
+}
+
+.modal {
+    backdrop-filter: blur(16px) saturate(180%);
+    -webkit-backdrop-filter: blur(16px) saturate(180%);
+    background-color: rgba(255, 255, 255, 0.75);
+    border-radius: 12px;
+    border: 1px solid rgba(209, 213, 219, 0.3);
     position: fixed;
     bottom: 5rem;
     left: 0px;
@@ -266,10 +273,10 @@ input {
     border-radius: 1rem;
     max-height: 26rem;
     overflow-y: auto;
+    padding: 20px;
 }
 
 #settings .label {
-    padding: 1rem 1rem 0.25rem;
     font-weight: bold;
 }
 
@@ -298,7 +305,6 @@ input {
 }
 
 #settings input {
-    margin: 0rem 1rem 1rem;
     width: calc(100% - 2rem);
 }
 
@@ -1157,4 +1163,32 @@ body.modal-active {
     100% {
         transform: scale(0);
     }
+}
+
+.videos {
+    margin: 30px 0 30px 0;
+}
+
+.searchBtn {
+    background-color: #D02121;
+    color: #fff;
+}
+
+.videos {
+    padding: 10px;
+    border-radius: 10px;
+}
+
+.input-group {
+    top: 21px;
+}
+
+.nextpr {
+    display: none;
+    margin-right: 18px;
+    margin-bottom: 20px;
+}
+
+.videos .title {
+    font-size: 16px;
 }
