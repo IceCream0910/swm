@@ -208,16 +208,25 @@ const App = new Vue({
                             $(".pyro").hide();
                         }, 5000);
                     } else if (chatMessage.message == '/눈뽕') {
-                        var timer = setInterval(setColor, 1000);
-                        setTimeout(stopColor, 3000);
+                        var timer = setInterval(setColor, 10);
+                        setTimeout(stopColor, 1500);
 
                         function setColor() {
-                            var x = document.body;
-                            x.style.backgroundColor = x.style.backgroundColor == 'red' ? 'blue' : 'red';
+                            var x = document.getElementById("chats");
+
+                            if (x.style.backgroundColor == 'rgb(255, 255, 255)') {
+                                x.style.backgroundColor = 'rgb(0, 0, 0)';
+                            } else {
+                                x.style.backgroundColor = 'rgb(255, 255, 255)';
+                            }
+
                         }
 
                         function stopColor() {
+                            var x = document.getElementById("chats");
+
                             clearInterval(timer);
+                            x.style.backgroundColor = 'transparent';
                         }
                     }
                     this.$nextTick(() => {

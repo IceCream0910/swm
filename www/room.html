@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <base href="/">
+
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <meta name="viewport" content="width=device-width, height=device-height, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" />
+    <meta name="description" content="호로로로롤ㄹ로로로" />
+    <meta name="keywords" content="" />
+    <meta name="application-name" content="들어와봐" />
+    <!-- Meta data for link fetching -->
+    <meta property="og:url" content="https://usetalk.io" />
+    <meta property="og:image" content="https://usetalk.io/icon.png" />
+    <meta property="og:title" content="들어와봐" />
+    <meta property="og:description" content="헹릴레레" />
+
+    <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png" />
+    <link rel="icon" href="/favicon.svg" />
+    <link rel="stylesheet" href="/style.css" />
+    <link rel="stylesheet" href="/fireworks.css" />
+
+
+    <script defer src="https://webrtc.github.io/adapter/adapter-latest.js"></script>
+
+
+    <script defer src="/socket.io/socket.io.js"></script>
+    <script defer src="vue.min.js"></script>
+    <script defer src="app.js"></script>
+    <script defer src="script.js"></script>
+    <script src="youtube.js"></script>
+    <title>들어왔네 ㅎㅇ</title>
+    <script type="module" src="https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.esm.js"></script>
+    <script nomodule src="https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.js"></script>
+    <script src="https://code.jquery.com/jquery-2.2.1.min.js"></script>
+    <script src="https://www.youtube.com/iframe_api"></script>
+
+    <div class="msg animate slide-in-down"></div>
+</head>
+
+<body>
+
+    <div class="fixed-btn flip-btn" onclick="javascript:flipSection();" style="display:none;">
+        <ion-icon id="youtube-icon-btn" name="logo-youtube"></ion-icon>
+        <ion-icon id="video-icon-btn" name="videocam-outline"></ion-icon>
+    </div>
+
+    <div class="pyro" style="display:none;">
+        <div class="before"></div>
+        <div class="after"></div>
+    </div>
+
+    <main id="app" v-bind:style="'display:block'">
+        <div id="intro" v-if="showIntro && !showChat && !showSettings">
+            <p>
+                <strong>반가워요😃</strong> 친구가 참여하기를 기다리고 있어요.
+            </p>
+            <p>
+                <small>
+						<i>친구에게 이 링크를 공유하세요.</i><br />
+						<span class="roomLink">{{roomLink}}</span>
+						<a class="copyURL" href="javascript:void(0)" v-on:click="copyURL">{{copyText || "복사"}}</a>
+					</small>
+            </p>
+            <div class="footer">
+                <a href="/legal.html" class="terms light"><small>개인정보 처리방침</small></a>
+            </div>
+        </div>
+
+        <div id="chatWrap">
+            <div id="video-container">
+                <section id="videos">
+                </section>
+                <section id="youtube-sec" style="display:none;">
+                    <div id="player"></div>
+                </section>
+            </div>
+
+            <div id="chats" ref="chats">
+                <div class="chat" v-for="(chat, i) in chats" v-bind:key="i">
+                    <span class="name">{{chat.name}}</span>
+                    <span class="date light"> &middot; {{formatDate(chat.date)}}</span>
+                    <div class="message" v-html="linkify(chat.message)"></div>
+                </div>
+                <div id="noChat" class="light" v-if="!chats.length" style="margin-top:30vh;"><small>💬 메시지를 남겨보세요</small></div>
+
+            </div>
+            <div id="composeBox">
+                <div id="placeholder" v-if="typing.length <= 0">입력 후 엔터키로 전송</div>
+                <div id="compose" contenteditable="true" v-on:keydown.enter="sendChat" v-on:input="edit($event)" v-on:paste="paste($event)"></div>
+            </div>
+        </div>
+
+        <div class="overlay" id="youtubeWrap" v-if="showYoutubeSet">
+            <div class="modal">
+                <p>
+                    <strong>Youtube</strong> 영상 공유
+                </p>
+
+                <script src="https://apis.google.com/js/client.js?onload=googleApiClientReady">
+                </script>
+
+                <div class="col-md-5">
+                    <div class="input-group">
+                        <input type="text" id="youtube-input" placeholder="검색어나 링크 입력" v-on:keydown.enter="youtubeBtn" />
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-12">
+                        <div id="results"></div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md12 pull-right nextpr">
+                        <button type="button" id="prev" onclick="prevB()" class="btn btn-danger">Previous</button>
+                        <button type="button" id="next" onclick="nextB()" class="btn btn-danger">Next</button>
+                    </div>
+                </div>
+
+                <button class="copy link" v-on:click="stopYoutubeShare" style='background:#e74c3c;border-radius:10px;color:white;padding:10px 10px;font-size:12px;width:auto;border:none;margin-top:10px;'>현재 공유중인 영상 공유 중지</button>
+
+            </div>
+
+        </div>
+
+        <div class="overlay" id="settings" v-if="showSettings">
+            <div class="modal">
+                <div class="label">카메라 📹</div>
+                <div v-for="(videoDevice, i) in videoDevices" v-bind:key="videoDevice.deviceId">
+                    <div v-bind:class="'link '+(selectedVideoDeviceId === videoDevice.deviceId ? 'active' : '')" v-on:click="changeCamera(videoDevice.deviceId)">
+                        {{videoDevice.label}}
+                    </div>
+                </div>
+                <hr>
+                <div class="label">마이크 🎙️</div>
+                <div v-for="(audioDevice, i) in audioDevices" v-bind:key="audioDevice.deviceId">
+                    <div v-bind:class="'link '+(selectedAudioDeviceId === audioDevice.deviceId ? 'active' : '')" v-on:click="changeMicrophone(audioDevice.deviceId)">
+                        {{audioDevice.label}}
+                    </div>
+                </div>
+                <hr>
+                <div class="label">이름 설정</div>
+                <input type="text" id="name-set" placeholder="이름을 입력해주세요." v-model="name" v-on:keyup="nameToLocalStorage" />
+                <hr>
+                <div class="copy link" v-on:click="copyURL">{{copyText || "초대 링크 복사"}}</div>
+                <div class="copy link" v-on:click="toggleSelfVideoMirror">
+                    카메라 좌우반전
+                    <small class="light">(나에게만 적용)</small>
+                </div>
+            </div>
+        </div>
+
+        <div id="actionsWrap">
+            <div id="actions">
+                <button v-bind:class="'icon-mic'+(audioEnabled ? '' : '-off')" v-on:click="audioToggle"></button>
+                <button v-bind:class="'icon-video'+(videoEnabled ? '' : '-off')" v-on:click="videoToggle"></button>
+                <button v-bind:class="(showYoutubeSet ? 'active' : '')" v-on:click="showYoutubeSet = !showYoutubeSet;showSettings=false;"><img src="https://www.seekpng.com/png/full/21-215231_transparent-download-social-png-icon-free-download-number.png" style="width:23px;"></button>
+                <button v-bind:class="'icon-more-horizontal '+(showSettings ? 'active' : '')" v-on:click="showSettings = !showSettings;showYoutubeSet=false;"></button>
+            </div>
+        </div>
+    </main>
+</body>
+
+<script>
+    function flipSection() {
+        if ($('#videos').css('display') === 'none') {
+            $('#youtube-sec').hide();
+            $('#videos').show();
+            $('#video-icon-btn').hide();
+            $('#youtube-icon-btn').show();
+        } else {
+            $('#youtube-sec').show();
+            $('#videos').hide();
+            $('#video-icon-btn').show();
+            $('#youtube-icon-btn').hide();
+        }
+    }
+</script>
+
+</html>

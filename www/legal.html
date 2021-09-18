@@ -1,82 +1,47 @@
 <!DOCTYPE html>
 <html lang="en">
-	<head>
-		<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-		<meta
-			name="viewport"
-			content="width=device-width, height=device-height, initial-scale=1.0, maximum-scale=1.0, user-scalable=0"
-		/>
-		<meta name="description" content="Talk - A free video call app for the web." />
-		<meta
-			name="keywords"
-			content="group video chat, video communication, multiparty video chat, video chat, webrtc, peer to peer, p2p"
-		/>
-		<meta name="application-name" content="Talk" />
-		<link rel="icon" href="favicon.png" type="image/png" />
-		<link rel="stylesheet" href="style.css" />
-		<title>Talk - A free video call app for the web</title>
-		<!-- Global site tag (gtag.js) - Google Analytics -->
-		<script async src="https://www.googletagmanager.com/gtag/js?id=UA-19124340-30"></script>
-		<script>
-			window.dataLayer = window.dataLayer || [];
-			function gtag() {
-				dataLayer.push(arguments);
-			}
-			gtag("js", new Date());
 
-			gtag("config", "UA-19124340-30");
-		</script>
-		<style>
-			#wrapper {
-				width: 100%;
-				max-width: 768px;
-				padding: 10px;
-				box-sizing: border-box;
-				margin: 1rem auto;
-			}
-			#logo img {
-				position: relative;
-				left: -2px;
-			}
-		</style>
-	</head>
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 
-	<body>
-		<div id="wrapper">
-			<header>
-				<div id="logo">
-					<img src="favicon.svg" />
-				</div>
-			</header>
-			<h3>Legal</h3>
-			<p>
-				This service is provided under an "as is" condition. It might change or will be discontinued without prior
-				notice. The maker of this service can't be held liable in any way for any reason.
-			</p>
-			<h3>Privacy policy</h3>
-			<p>
-				We limit ourselves to collect the smallest amount of user data that we need to create a seamless experience when
-				using Talk. This data includes
-				<a href="https://developer.mozilla.org/en-US/docs/Web/API/RTCIceCandidate" target="_blank">
+    <link rel="stylesheet" href="style.css" />
+    <title>개인정보 처리방침</title>
+    <style>
+        #wrapper {
+            width: 100%;
+            max-width: 768px;
+            padding: 10px;
+            box-sizing: border-box;
+            margin: 1rem auto;
+        }
+        
+        #logo img {
+            position: relative;
+            left: -2px;
+        }
+    </style>
+</head>
+
+<body>
+    <div id="wrapper">
+        <header>
+        </header>
+        <h3>개인정보 처리방침</h3>
+        <p>
+            우리는 원활한 환경을 구축하기 위해 필요한 최소한의 사용자 데이터만 수집하도록 제한하고 있습니다. 이 데이터에는 앱 내 메시징 환경을 위해 WebRTC, 사용자 이름 및 채팅을 사용하여 영상 통화를 설정하는 데 필요한 <a href="https://developer.mozilla.org/en-US/docs/Web/API/RTCIceCandidate" target="_blank">
 					RTCICECandidates
-				</a>
-				&
-				<a href="https://developer.mozilla.org/en-US/docs/Web/API/RTCSessionDescription" target="_blank">
+				</a> & <a href="https://developer.mozilla.org/en-US/docs/Web/API/RTCSessionDescription" target="_blank">
 					RTCSessionDescription
-				</a>
-				which is needed to establish the video call using WebRTC, your name & chat for a messaging experience inside the
-				app. RTCICECandidates & RTCSessionDescription is not stored in any persistent database, it's removed from the
-				server as soon as the user leaves the call by closing the browser window. Your chat messages, video & audio are
-				all 100% peer-to-peer, meaning they never touch our server at all. We also collect your name which will be
-				stored on your browser and used to identify the chat messages you send.
-			</p>
-			<p>
-				Talk is purely peer-to-peer, which means the user's video & audio is not sent to our server at all. We use
-				Google Analytics to track aggregated usage statistics to improve our service.
-			</p>
-			<p>
-				The makers of Talk have no intention of using personally or selling any of the above-mentioned data.
-			</p>
-		</div>
-	</body>
+				</a>이 포함됩니다. RTCICECandites & RTCSessionDescription은 영구 데이터베이스에 저장되지 않으며 사용자가 브라우저 창을 닫으면 호출을 종료하는 즉시 서버에서 제거됩니다. 채팅 메시지, 비디오 및 오디오는 모두 100% 피어 투 피어이므로 서버에 전혀 접촉하지 않습니다. 또한 브라우저에 저장되고 사용자가 보내는 채팅 메시지를 식별하는 데 사용되는 사용자의 이름을 수집합니다.
+
+        </p>
+        <p>
+            모든 데이터는 사용자끼리만 교환됩니다. 이것은 사용자의 비디오와 오디오가 우리의 서버로 전혀 전송되지 않는다는 것을 의미한다. Google Analytics를 사용하여 집계된 사용량 통계를 추적하여 서비스를 개선합니다.
+
+        </p>
+        <p>
+            위에서 언급한 데이터 중 어느 것도 개인적으로 사용하거나 판매할 의도가 없습니다. </p>
+    </div>
+</body>
+
 </html>
