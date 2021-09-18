@@ -1,43 +1,46 @@
 <!DOCTYPE html>
+
 <head>
-<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     <meta name="viewport" content="width=device-width, height=device-height, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" />
-    </head>
+</head>
+
 <body>
 
 
-<div class="msg animate slide-in-down"></div>
+    <div class="msg animate slide-in-down"></div>
 
 
-<!-- Canvas -->
-<canvas class="orb-canvas"></canvas>
-<!-- Overlay -->
-<div class="overlay">
-    <!-- Overlay inner wrapper -->
-    <div class="overlay__inner">
-        <!-- Title -->
-        <h1 class="overlay__title">
-            만나서 반가워요 😃<br>
-            <span id="txt-change"></span>
-            <span class="text-gradient">연결</span>을 시작해보세요
-        </h1>
-        <!-- Buttons -->
-        <div class="overlay__btns">
+    <!-- Canvas -->
+    <canvas class="orb-canvas"></canvas>
+    <!-- Overlay -->
+    <div class="overlay">
+        <!-- Overlay inner wrapper -->
+        <div class="overlay__inner">
+            <!-- Title -->
+            <h1 class="overlay__title">
+                만나서 반가워요 😃<br>
+                <span id="txt-change"></span>
+                <span class="text-gradient">연결</span>을 시작해보세요
+            </h1>
+            <!-- Buttons -->
+            <div class="overlay__btns">
 
-            <input type="text" id="roomID" placeholder="회의 ID" maxlength="6">
+                <input type="text" id="roomID" placeholder="회의 ID" maxlength="6">
 
-            <button onclick="javascript:startMeet();" class="overlay__btn overlay__btn--transparent" style="border-radius:0 0.5rem 0.5rem 0;border-left:none;width:30%;">
+                <button onclick="javascript:startMeet();" class="overlay__btn overlay__btn--transparent" style="border-radius:0 0.5rem 0.5rem 0;border-left:none;width:30%;">
           참가
       </button>
-
-            <button class="overlay__btn overlay__btn--colors" onclick="javascript:newMeet(); ">
+            </div>
+            <button class="overlay__btn overlay__btn--colors" style="margin-top:10px;" onclick="javascript:newMeet(); ">
         <span>새 회의 생성</span>
        
       </button>
+
         </div>
     </div>
-</div>
 </body>
+
 </html>
 
 <style>
@@ -154,6 +157,10 @@
         width: 100%;
         max-width: 30rem;
         display: flex;
+    }
+    
+    .firstBtn {
+        margin-bottom: 20px;
     }
     
     .overlay__btn {
@@ -315,7 +322,7 @@
     }
 
     function newMeet() {
-        var al = "abcdefghijklmnopqrstuvwxyx";
+        var al = "abcdefghijklmnopqrstuvwxyxABCDEFGHIJKLMNOPQRSTUVWXYZ";
         var result = "";
 
         while (result.length < 6) {

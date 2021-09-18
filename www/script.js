@@ -55,6 +55,7 @@ function init() {
             setupLocalMedia(function() {
                 joinChatChannel(ROOM_ID, {});
                 render('success', "환영합니다 :)", 3000);
+                $('#loader').fadeOut(300);
             });
     });
     signalingSocket.on("disconnect", function() {
@@ -202,9 +203,13 @@ function setupLocalMedia(callback, errorback) {
         .getUserMedia({ audio: USE_AUDIO, video: USE_VIDEO })
         .then((stream) => {
             localMediaStream = stream;
+
             const localMedia = getVideoElement(null, true);
+
+
             attachMediaStream(localMedia, stream);
             resizeVideos();
+
             if (callback) callback();
 
             navigator.mediaDevices.enumerateDevices().then((devices) => {
@@ -229,6 +234,7 @@ const getVideoElement = (peerId, isLocal) => {
     const videoWrap = document.createElement("div");
     videoWrap.className = "video";
     const media = document.createElement("video");
+    //loadBodyPix(media);
     media.setAttribute("playsinline", true);
     media.autoplay = true;
     media.controls = false;
@@ -281,11 +287,33 @@ const resizeVideos = () => {
             height: '50vh'
         });
     }
-
-
-
-
 };
+
+function loadBodyPix(target) {
+    options = {
+        multiplier: 0.75,
+        stride: 32,
+        quantBytes: 4
+    }
+    bodyPix.load(options)
+        .then(net => perform(net, target))
+        .catch(err => console.log(err))
+}
+
+async function perform(net, target) {
+    const segmentation = await net.segmentPerson(target);
+
+    const backgroundBlurAmount = 6;
+    const edgeBlurAmount = 2;
+    const flipHorizontal = true;
+
+    bodyPix.drawBokehEffect(
+        canvas, videoElement, segmentation, backgroundBlurAmount,
+        edgeBlurAmount, flipHorizontal);
+}
+
+
+
 
 window.onresize = function(event) {
     var windowWidth = window.matchMedia("screen and (max-width: 960px)");
