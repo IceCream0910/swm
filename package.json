@@ -1,8 +1,8 @@
 {
-    "name": "talk",
+    "name": "ㅎㅇ",
     "version": "2.0.4",
     "homepage": "https://github.com/vasanthv/talk#readme",
-    "description": "A free video call app for the web.",
+    "description": "들어와라",
     "main": "server.js",
     "scripts": {
         "test": "echo \"Error: no test specified\" && exit 1"

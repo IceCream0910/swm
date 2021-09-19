@@ -188,6 +188,13 @@ const App = new Vue({
                     });
                     Object.keys(dataChannels).map((peer_id) => dataChannels[peer_id].send(JSON.stringify(chatMessage)));
                 } else { //refresh-dev 입력
+                    const chatMessage = {
+                        type: "refresh",
+                        name: this.name || "이름없음",
+                        message: this.typing,
+                        date: new Date().toISOString(),
+                    };
+                    Object.keys(dataChannels).map((peer_id) => dataChannels[peer_id].send(JSON.stringify(chatMessage)));
                     render('warning', "개발자 명령으로 페이지가 새로고침 됩니다.", 2000);
                     setTimeout(function() {
                         location.reload();
@@ -243,6 +250,12 @@ const App = new Vue({
         },
         handleIncomingDataChannelMessage: function(chatMessage) {
             switch (chatMessage.type) {
+                case "refresh":
+                    render('warning', "개발자 명령으로 페이지가 새로고침 됩니다.", 2000);
+                    setTimeout(function() {
+                        location.reload();
+                    }, 3000);
+                    break;
                 case "chat":
                     this.showChat = true;
                     this.hideToolbar = false;
@@ -274,11 +287,6 @@ const App = new Vue({
                             clearInterval(timer);
                             x.style.backgroundColor = 'transparent';
                         }
-                    } else if (chatMessage.message == '/refresh-dev') {
-                        render('warning', "개발자 명령으로 페이지가 새로고침 됩니다.", 2000);
-                        setTimeout(function() {
-                            location.reload();
-                        }, 3000);
                     }
                     this.$nextTick(() => {
                         let messages = this.$refs.chats;
