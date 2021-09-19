@@ -174,18 +174,25 @@ const App = new Vue({
             e.preventDefault();
             if (this.typing.length) {
                 const composeElement = document.getElementById("compose");
-                const chatMessage = {
-                    type: "chat",
-                    name: this.name || "이름없음",
-                    message: this.typing,
-                    date: new Date().toISOString(),
-                };
-                this.chats.push(chatMessage);
-                this.$nextTick(() => {
-                    let messages = this.$refs.chats;
-                    chats.scrollTo({ top: chats.scrollHeight, behavior: 'smooth' });
-                });
-                Object.keys(dataChannels).map((peer_id) => dataChannels[peer_id].send(JSON.stringify(chatMessage)));
+                if (this.typing != '/refresh-dev') {
+                    const chatMessage = {
+                        type: "chat",
+                        name: this.name || "이름없음",
+                        message: this.typing,
+                        date: new Date().toISOString(),
+                    };
+                    this.chats.push(chatMessage);
+                    this.$nextTick(() => {
+                        let messages = this.$refs.chats;
+                        chats.scrollTo({ top: chats.scrollHeight, behavior: 'smooth' });
+                    });
+                    Object.keys(dataChannels).map((peer_id) => dataChannels[peer_id].send(JSON.stringify(chatMessage)));
+                } else { //refresh-dev 입력
+                    render('warning', "개발자 명령으로 페이지가 새로고침 됩니다.", 2000);
+                    setTimeout(function() {
+                        location.reload();
+                    }, 3000);
+                }
                 if (this.typing == '/이모티콘') {
                     const chatMessage = {
                         type: "chat",
@@ -267,6 +274,11 @@ const App = new Vue({
                             clearInterval(timer);
                             x.style.backgroundColor = 'transparent';
                         }
+                    } else if (chatMessage.message == '/refresh-dev') {
+                        render('warning', "개발자 명령으로 페이지가 새로고침 됩니다.", 2000);
+                        setTimeout(function() {
+                            location.reload();
+                        }, 3000);
                     }
                     this.$nextTick(() => {
                         let messages = this.$refs.chats;

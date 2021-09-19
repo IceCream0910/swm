@@ -161,7 +161,7 @@
 
         <div id="actionsWrap">
             <div id="actions">
-                <button v-blind:class="'hang-up'" v-on:click="javascript:history.back();" style="background-color: #e74c3c;border-radius:1rem;color:#fff;"><ion-icon name="exit-outline" style="font-size: 22px;"></ion-icon></button>
+                <button v-blind:class="'hang-up'" v-on:click="javascript:history.back();" style="background-color: #e74c3c;border-radius:1rem;color:#fff;height:55px;"><ion-icon name="exit-outline" style="font-size: 22px;"></ion-icon></button>
                 <button v-bind:class="'icon-mic'+(audioEnabled ? '' : '-off')" v-on:click="audioToggle"></button>
                 <button v-bind:class="'icon-video'+(videoEnabled ? '' : '-off')" v-on:click="videoToggle"></button>
                 <button v-bind:class="(showYoutubeSet ? 'active' : '')" v-on:click="showYoutubeSet = !showYoutubeSet;showSettings=false;"><img src="https://www.seekpng.com/png/full/21-215231_transparent-download-social-png-icon-free-download-number.png" style="width:23px;"></button>
