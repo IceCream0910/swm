@@ -54,6 +54,45 @@ const App = new Vue({
             console.log('youtube');
 
         },
+        screenShareToggle: function(e) {
+            e.stopPropagation();
+            let screenMediaPromise;
+            if (!App.screenshareEnabled) {
+                if (navigator.getDisplayMedia) {
+                    screenMediaPromise = navigator.getDisplayMedia({ video: true });
+                } else if (navigator.mediaDevices.getDisplayMedia) {
+                    screenMediaPromise = navigator.mediaDevices.getDisplayMedia({ video: true });
+                } else {
+                    screenMediaPromise = navigator.mediaDevices.getUserMedia({
+                        video: { mediaSource: "screen" },
+                    });
+                }
+            } else {
+                screenMediaPromise = navigator.mediaDevices.getUserMedia({ video: true });
+            }
+            screenMediaPromise
+                .then((screenStream) => {
+                    App.screenshareEnabled = !App.screenshareEnabled;
+
+                    for (let peer_id in peers) {
+                        const sender = peers[peer_id].getSenders().find((s) => (s.track ? s.track.kind === "video" : false));
+                        sender.replaceTrack(screenStream.getVideoTracks()[0]);
+                    }
+                    screenStream.getVideoTracks()[0].enabled = true;
+                    const newStream = new MediaStream([screenStream.getVideoTracks()[0], localMediaStream.getAudioTracks()[0]]);
+                    localMediaStream = newStream;
+                    attachMediaStream(document.getElementById("selfVideo"), newStream);
+                    this.toggleSelfVideoMirror();
+
+                    screenStream.getVideoTracks()[0].onended = function() {
+                        if (App.screenshareEnabled) App.screenShareToggle();
+                    };
+                })
+                .catch((e) => {
+                    render('danger', "화면공유에 실패했어요.", 2000);
+                    console.error(e);
+                });
+        },
         changeCamera: function(deviceId) {
             navigator.mediaDevices
                 .getUserMedia({ video: { deviceId: deviceId } })
