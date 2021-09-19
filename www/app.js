@@ -219,16 +219,17 @@ const App = new Vue({
                         $(".pyro").hide();
                     }, 5000);
                 } else if (this.typing == '/눈뽕') {
+                    document.getElementById("chats").style.backgroundColor == 'rgb(0, 0, 255)'
                     var timer = setInterval(setColor, 10);
-                    setTimeout(stopColor, 1500);
+                    setTimeout(stopColor, 500);
 
                     function setColor() {
                         var x = document.getElementById("chats");
 
-                        if (x.style.backgroundColor == 'rgb(255, 255, 255)') {
-                            x.style.backgroundColor = 'rgb(0, 0, 0)';
+                        if (x.style.backgroundColor == 'rgb(0, 0, 255)') {
+                            x.style.backgroundColor = 'rgb(255, 0, 0)';
                         } else {
-                            x.style.backgroundColor = 'rgb(255, 255, 255)';
+                            x.style.backgroundColor = 'rgb(0, 0, 255)';
                         }
 
                     }
@@ -267,16 +268,17 @@ const App = new Vue({
                             $(".pyro").hide();
                         }, 5000);
                     } else if (chatMessage.message == '/눈뽕') {
+                        document.getElementById("chats").style.backgroundColor == 'rgb(0, 0, 255)'
                         var timer = setInterval(setColor, 10);
-                        setTimeout(stopColor, 1500);
+                        setTimeout(stopColor, 500);
 
                         function setColor() {
                             var x = document.getElementById("chats");
 
-                            if (x.style.backgroundColor == 'rgb(255, 255, 255)') {
-                                x.style.backgroundColor = 'rgb(0, 0, 0)';
+                            if (x.style.backgroundColor == 'rgb(0, 0, 255)') {
+                                x.style.backgroundColor = 'rgb(255, 0, 0)';
                             } else {
-                                x.style.backgroundColor = 'rgb(255, 255, 255)';
+                                x.style.backgroundColor = 'rgb(0, 0, 255)';
                             }
 
                         }
