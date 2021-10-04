@@ -2,7 +2,10 @@
 
 <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <script src="https://code.jquery.com/jquery-2.2.1.min.js"></script>
     <meta name="viewport" content="width=device-width, height=device-height, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" />
+    <script src="https://www.gstatic.com/firebasejs/4.11.0/firebase.js"></script>
+
 </head>
 
 <body>
@@ -10,20 +13,17 @@
 
     <div class="msg animate slide-in-down"></div>
 
+    <div class="userlist">
+    </div>
 
-    <!-- Canvas -->
     <canvas class="orb-canvas"></canvas>
-    <!-- Overlay -->
     <div class="overlay">
-        <!-- Overlay inner wrapper -->
         <div class="overlay__inner">
-            <!-- Title -->
             <h1 class="overlay__title">
                 만나서 반가워요 😃<br>
                 <span id="txt-change"></span>
                 <span class="text-gradient">연결</span>을 시작해보세요
             </h1>
-            <!-- Buttons -->
             <div class="overlay__btns">
 
                 <input type="text" id="roomID" placeholder="회의 ID" maxlength="6">
@@ -387,5 +387,96 @@
 
     function hide() {
         $msg.removeClass('msg-success msg-danger msg-warning msg-info active');
+    }
+</script>
+
+<script>
+    var email = '';
+    var username = '';
+
+    $.ajax({
+        type: "GET",
+        url: "../auth/profile",
+        success: function(result) {
+            if (result == "unlogin") {
+                window.localStorage.name = '';
+                console.log('로그인 필요');
+                location.href = 'login.html'
+            } else {
+                window.localStorage.name = result.nickname;
+                username = result.nickname;
+                email = result.email;
+                savedata();
+            }
+
+        }
+    });
+
+    // Initialize Firebase
+    var config = {
+        apiKey: "AIzaSyBSMucNkAiYFvqlFMwfx0wJwaBm4Ch02TY",
+        authDomain: "studywith-27574.firebaseapp.com",
+        databaseURL: "https://studywith-27574-default-rtdb.firebaseio.com",
+        projectId: "studywith-27574",
+        storageBucket: "studywith-27574.appspot.com",
+        messagingSenderId: "552036737705",
+        appId: "1:552036737705:web:0678b231cb1e78fc3b3fb8",
+        measurementId: "G-4KJ0ZW7E91"
+    };
+    firebase.initializeApp(config);
+
+    // Get a reference to the database service
+    var database = firebase.database();
+
+    //메세지 저장
+    var messageRef = firebase.database().ref('users');
+    messageRef.on('value', (snapshot) => {
+        const data = snapshot.val();
+        updateUserList(data, snapshot.numChildren());
+    });
+
+    function savedata() {
+        var generatedEmail = email.replaceAll("@", "AT").replaceAll(".", "DOT");
+        var todaytime = '4264356'; //오늘 공부시간 예제 데이터(추후 실제 데이터 사용)
+        database.ref('users/' + generatedEmail).set({
+            nickname: username,
+            studyTime: todaytime
+        });
+    }
+
+    //삭제
+    function deleteall() {
+        database.ref("users").remove();
+    }
+
+    function msToHMS(ms) {
+        // 1- Convert to seconds:
+        var seconds = ms / 1000;
+        // 2- Extract hours:
+        var hours = parseInt(seconds / 3600); // 3,600 seconds in 1 hour
+        seconds = seconds % 3600; // seconds remaining after extracting hours
+        // 3- Extract minutes:
+        var minutes = parseInt(seconds / 60); // 60 seconds in 1 minute
+        // 4- Keep only seconds not extracted to minutes:
+        seconds = seconds % 60;
+        return (hours + ":" + minutes);
+    }
+
+    function updateUserList(data, length) {
+        var userlist = {};
+
+        $('.userlist').html('');
+
+        var cnt = 0;
+        $.each(data, function(key, value) {
+            userlist[cnt] = value;
+            cnt++;
+        });
+        console.log(userlist);
+
+        for (var i = 0; i < length; i++) {
+            $('.userlist').append('<div class="user-item"><h3>' + userlist[i].nickname + '</h3> <h3>' + msToHMS(Number(userlist[i].studyTime)) + '</h3> </div>');
+        }
+
     }
 </script>

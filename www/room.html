@@ -129,8 +129,6 @@
 
         </div>
 
-
-
         <div class="overlay" id="settings" v-if="showSettings">
             <div class="modal">
                 <h2>설정</h2>
@@ -149,7 +147,6 @@
                 </div>
                 <hr>
                 <div class="label">이름 설정</div>
-                <input type="text" id="name-set" placeholder="이름을 입력해주세요." v-model="name" v-on:keyup="nameToLocalStorage" />
                 <hr>
                 <div class="copy link" v-on:click="copyURL">{{copyText || "초대 링크 복사"}}</div>
                 <div class="copy link" v-on:click="toggleSelfVideoMirror">

@@ -22,7 +22,6 @@ const App = new Vue({
         player: "",
         isYoutubeHost: false,
     },
-    computed: {},
     methods: {
         copyURL: function() {
             navigator.clipboard.writeText(this.roomLink).then(
@@ -47,7 +46,7 @@ const App = new Vue({
             document.querySelector("#videos .video #selfVideo").classList.toggle("mirror");
         },
         nameToLocalStorage: function() {
-            window.localStorage.name = this.name;
+            // window.localStorage.name = this.name;
         },
         youtubeShareToggle: function(e) {
             e.stopPropagation();
@@ -181,6 +180,7 @@ const App = new Vue({
                         message: this.typing,
                         date: new Date().toISOString(),
                     };
+                    console.log(chatMessage.name);
                     this.chats.push(chatMessage);
                     this.$nextTick(() => {
                         let messages = this.$refs.chats;
@@ -486,6 +486,7 @@ const App = new Vue({
         },
     },
     mounted() {
+
         this.$nextTick(function() {
             window.YT.ready(function() {
                 player = new YT.Player('player', {
@@ -512,7 +513,7 @@ const App = new Vue({
 
 
                 playAlert = setInterval(function() {
-                    console.log(this.isYoutubeHost);
+                    //console.log(this.isYoutubeHost);
                     if (this.isYoutubeHost) {
                         const chatMessage = {
                             type: "youtube_syncTime",

@@ -18,6 +18,7 @@ const ICE_SERVERS = [
     },
 ];
 
+
 const APP_URL = (() => {
     const protocol = "http" + (location.hostname == "localhost" ? "" : "s") + "://";
     return protocol + location.hostname + (location.hostname == "localhost" ? ":3000" : "");
@@ -44,6 +45,7 @@ let peerMediaElements = {}; /* keep track of our <video>/<audio> tags, indexed b
 let dataChannels = {};
 
 function init() {
+
     App.roomLink = `${APP_URL}/${ROOM_ID}`;
 
     signalingSocket = io(APP_URL);
