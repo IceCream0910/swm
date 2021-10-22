@@ -5,6 +5,8 @@
     <meta name="viewport" content="width=device-width, height=device-height, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" />
     <script src="https://cdnjs.cloudflare.com/ajax/libs/Swiper/3.3.0/js/swiper.min.js"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/Swiper/3.3.1/css/swiper.css">
+    <script type="module" src="https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.esm.js"></script>
+    <script nomodule src="https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.js"></script>
 </head>
 
 <body>
@@ -13,32 +15,17 @@
     <div class="login-container">
         <div class="login-form">
             <div class="login-form-inner">
+                <br><br>
                 <div class="logo"><svg height="512" viewBox="0 0 192 192" width="512" xmlns="http://www.w3.org/2000/svg">
             <path d="m155.109 74.028a4 4 0 0 0 -3.48-2.028h-52.4l8.785-67.123a4.023 4.023 0 0 0 -7.373-2.614l-63.724 111.642a4 4 0 0 0 3.407 6.095h51.617l-6.962 67.224a4.024 4.024 0 0 0 7.411 2.461l62.671-111.63a4 4 0 0 0 .048-4.027z" />
           </svg></div>
                 <h1>반가워요</h1>
                 <p class="body-text">카카오계정으로 로그인해 스터딧을 시작해보세요.</p>
 
-                <a href="/auth/kakao" class="rounded-button login-cta">카카오계정으로 로그인</a>
+                <a href="/auth/kakao" class="rounded-button login-cta"><img width="20px" src="https://t1.daumcdn.net/cfile/tistory/2315BC3453D9F98F03">&nbsp;&nbsp;카카오로 시작하기&nbsp;
+                    <ion-icon name="arrow-forward-outline"></ion-icon>
+                </a>
 
-            </div>
-            <div class="onboarding">
-                <div class="swiper-container">
-                    <div class="swiper-wrapper">
-
-                        <div class="swiper-slide color-1">
-                            <div class="slide-image">
-                                <img src="https://raw.githubusercontent.com/ismailvtl/ismailvtl.github.io/master/images/cloud-storage.png" loading="lazy" alt="" />
-                            </div>
-                            <div class="slide-content">
-                                <h2>함께 공부해보세요</h2>
-                                <p>비디오와 오디오를 이용해 실시간으로 서로의 모습을 공유하며 공부할 수 있습니다.</p>
-                            </div>
-                        </div>
-                    </div>
-                    <!-- Add Pagination -->
-                    <div class="swiper-pagination"></div>
-                </div>
             </div>
         </div>
 
@@ -46,6 +33,13 @@
 
 </html>
 <style>
+    @font-face {
+        font-family: 'NEXON Lv1 Gothic OTF';
+        src: url('https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_20-04@2.1/NEXON Lv1 Gothic OTF.woff') format('woff');
+        font-weight: normal;
+        font-style: normal;
+    }
+    
     @import url("https://fonts.googleapis.com/css2?family=Raleway:wght@200;300;400;500&display=swap");
      :root {
         --bodybg: #dcdefe;
@@ -59,13 +53,13 @@
     }
     
     * {
+        font-family: "NEXON Lv1 Gothic OTF", sans-serif;
         margin: 0;
         padding: 0;
     }
     
     body {
         background: var(--bodybg);
-        font-family: "Raleway", sans-serif;
         height: 100vh;
         display: flex;
     }
@@ -74,7 +68,6 @@
         display: flex;
         background: var(--white);
         width: 100%;
-        min-width: 320px;
     }
     
     .login-container .logo svg {
@@ -277,7 +270,9 @@
     
     .login-container .rounded-button {
         display: flex;
-        width: 100%;
+        width: auto;
+        position: fixed;
+        bottom: 0;
         text-decoration: none;
         border-radius: 50px;
         padding: 13px 20px;

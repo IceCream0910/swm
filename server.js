@@ -30,13 +30,15 @@ app.use(session({
 const kakao = {
         clientID: '51e4976c7ef7df823c92663cdaef6fbc',
         clientSecret: 'pSgJYbhkgNFdAkZZ0R2jfM4QxBUS7XQQ',
-        redirectUri: 'https://comeon-yo.herokuapp.com/auth/kakao/callback'
+        //redirectUri: 'https://comeon-yo.herokuapp.com/auth/kakao/callback'
+        redirectUri: 'http://localhost:3000/auth/kakao/callback'
     }
     //profile account_email
 app.get('/auth/kakao', (req, res) => {
     const kakaoAuthURL = `https://kauth.kakao.com/oauth/authorize?client_id=${kakao.clientID}&redirect_uri=${kakao.redirectUri}&response_type=code&scope=profile_nickname,profile_image,account_email`;
     res.redirect(kakaoAuthURL);
 })
+
 
 app.get('/auth/kakao/callback', async(req, res) => {
     //axios>>promise object
@@ -82,9 +84,10 @@ app.get('/auth/kakao/callback', async(req, res) => {
 
 app.get('/auth/profile', (req, res) => {
     if (req.session.kakao) {
+        let { id } = req.session.kakao;
         let { nickname } = req.session.kakao.properties;
         let { email } = req.session.kakao.kakao_account;
-        res.send({ 'nickname': nickname, 'email': email });
+        res.send({ 'id': id, 'nickname': nickname, 'email': email });
 
     } else {
         res.send('unlogin');

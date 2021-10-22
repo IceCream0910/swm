@@ -315,7 +315,50 @@ async function perform(net, target) {
 }
 
 
+///계정 데이터베이스 연동
+// Initialize Firebase
+var config = {
+    apiKey: "AIzaSyBSMucNkAiYFvqlFMwfx0wJwaBm4Ch02TY",
+    authDomain: "studywith-27574.firebaseapp.com",
+    databaseURL: "https://studywith-27574-default-rtdb.firebaseio.com",
+    projectId: "studywith-27574",
+    storageBucket: "studywith-27574.appspot.com",
+    messagingSenderId: "552036737705",
+    appId: "1:552036737705:web:0678b231cb1e78fc3b3fb8",
+    measurementId: "G-4KJ0ZW7E91"
+};
+firebase.initializeApp(config);
 
+// Get a reference to the database service
+var database = firebase.database();
+
+var userid = '';
+const todayDate = new Date().toISOString();
+
+$.ajax({
+    type: "GET",
+    url: "../auth/profile",
+    success: function(result) {
+        if (result == "unlogin") {
+            window.localStorage.name = '';
+            location.href = 'login.html'
+        } else {
+            window.localStorage.name = result.nickname;
+            userid = result.id;
+            username = result.nickname;
+            useremail = result.email;
+        }
+
+    }
+});
+var accumulatedTime = 0;
+savedata = setInterval(function() {
+    accumulatedTime = accumulatedTime + 1000; //오늘 공부시간 예제 데이터(추후 실제 데이터 사용)
+    database.ref('users/' + userid).update({
+        studyTime: accumulatedTime.toString(),
+        lastStudy: todayDate,
+    });
+}, 1000);
 
 window.onresize = function(event) {
     var windowWidth = window.matchMedia("screen and (max-width: 960px)");
