@@ -60,6 +60,21 @@ function init() {
                 $('#loader').fadeOut(300);
             });
     });
+    window.addEventListener('beforeunload', function() {
+        userLeft();
+    }, false);
+
+    window.addEventListener('keyup', function(e) {
+        if (e.keyCode == 116)
+            userLeft();
+    }, false);
+
+    function userLeft() { //방 나가기
+        database.ref('users/' + userid).update({
+            currentRoomID: ''
+        });
+    }
+
     signalingSocket.on("disconnect", function() {
         for (let peer_id in peerMediaElements) {
             document.getElementById("videos").removeChild(peerMediaElements[peer_id].parentNode);
@@ -182,7 +197,12 @@ function init() {
         render('warning', "상대방이 나갔습니다", 3000);
         const peer_id = config.peer_id;
         if (peer_id in peerMediaElements) {
-            document.getElementById("videos").removeChild(peerMediaElements[peer_id].parentNode);
+            if (peer_id) {
+                document.getElementById("videos-others").removeChild(peerMediaElements[peer_id].parentNode);
+            } else {
+                document.getElementById("videos").removeChild(peerMediaElements[peer_id].parentNode);
+
+            }
             resizeVideos();
         }
         if (peer_id in peers) {
@@ -258,11 +278,25 @@ const getVideoElement = (peerId, isLocal) => {
         }
     });
 
-    videoWrap.setAttribute("id", peerId || "");
-    videoWrap.appendChild(media);
-    videoWrap.appendChild(fullScreenBtn);
-    document.getElementById("videos").appendChild(videoWrap);
-    return media;
+    const time_text = document.createElement("h1");
+    time_text.className = "time_text";
+    time_text.setAttribute("id", "today_stime");
+
+    if (peerId) {
+        videoWrap.setAttribute("id", peerId || "");
+        videoWrap.appendChild(media);
+        videoWrap.appendChild(fullScreenBtn);
+        document.getElementById("videos-others").appendChild(videoWrap);
+        return media;
+    } else {
+        videoWrap.setAttribute("id", peerId || "");
+        videoWrap.appendChild(media);
+        videoWrap.appendChild(fullScreenBtn);
+        videoWrap.appendChild(time_text);
+        document.getElementById("videos").appendChild(videoWrap);
+        return media;
+    }
+
 };
 
 const resizeVideos = () => {
@@ -274,20 +308,33 @@ const resizeVideos = () => {
 
     var windowWidth = window.matchMedia("screen and (max-width: 960px)");
     if (windowWidth.matches) {
-        console.log('m');
         $('#player').css({
-            width: '87%',
-            height: '25vh'
+            width: '100%',
+            height: '25vh',
+            margin: '0',
         });
+        $('#player').css('margin-top', '20px');
+        $('#player').css('border-radius', '0 0 20px 20px');
 
-        $('#chats').css({ top: $('.video').outerHeight() + 30 + 'px' });
-        $('#chats').css({ height: $(window).height() - $('.video').outerHeight() - 100 + 'px' });
+
+        $('#videos-others').css({ top: $('.video').outerHeight() + 30 + 'px' });
+
+        $('#chats').css({ position: 'absolute', width: '100%' });
+
+        $('#chats').css({ top: $('#videos-others').offset().top + $('#videos-others').outerHeight() + 30 + 'px' });
+        $('#chats').css({ height: $(window).height() - ($('#videos-others').offset().top + $('#videos-others').outerHeight()) - 100 + 'px' });
     } else {
         console.log('p');
+        $('#videos-others').css({ top: '0px' });
+        $('#chats').css({ top: $('#videos-others').outerHeight() + 30 + 'px', height: $(window).height() - $('#videos-others').outerHeight() - 100 + 'px' });
+
         $('#player').css({
-            width: '65%',
+            width: '55%',
             height: '50vh'
         });
+        $('#player').css('margin', '20px');
+        $('#player').css('border-radius', '20px');
+
     }
 };
 
@@ -347,28 +394,111 @@ $.ajax({
             userid = result.id;
             username = result.nickname;
             useremail = result.email;
+            //현재 상태 업데이트
+            database.ref('users/' + userid).update({
+                currentRoomID: ROOM_ID,
+            });
         }
 
     }
 });
+
 var accumulatedTime = 0;
-savedata = setInterval(function() {
-    accumulatedTime = accumulatedTime + 1000; //오늘 공부시간 예제 데이터(추후 실제 데이터 사용)
-    database.ref('users/' + userid).update({
-        studyTime: accumulatedTime.toString(),
-        lastStudy: todayDate,
+var isCompleteDataChecking = 0;
+
+
+var messageRef = firebase.database().ref('users').orderByChild("studyTime").startAt(0);
+messageRef.on('value', (snapshot) => {
+    const data = snapshot.val();
+    updateUserList(data, snapshot.numChildren());
+});
+
+function updateUserList(data, length) {
+    var userlist = {};
+
+    var cnt = 0;
+    $.each(data, function(key, value) {
+        userlist[cnt] = value;
+        cnt++;
     });
+
+    var today = todayDate.toString().substring(0, 10);
+    var foundValue = Object.values(userlist).filter(user => user.uid === userid);
+
+
+    if (foundValue[0].lastStudy.toString().indexOf(today) != -1) {
+
+        accumulatedTime = parseInt(foundValue[0].studyTime);
+        $('#today_stime').html(msToHMS(Number(foundValue[0].studyTime)));
+        //현재 상태 업데이트
+
+
+    } else {
+        accumulatedTime = 0;
+        //현재 상태 업데이트
+        database.ref('users/' + userid).update({
+            studyTime: '0',
+            lastStudy: todayDate,
+        });
+    }
+    isCompleteDataChecking = 1;
+
+
+}
+
+function msToHMS(ms) {
+    // 1- Convert to seconds:
+    var seconds = ms / 1000;
+    // 2- Extract hours:
+    var hours = parseInt(seconds / 3600).toString().padStart(2, '0'); // 3,600 seconds in 1 hour
+    seconds = seconds % 3600; // seconds remaining after extracting hours
+    // 3- Extract minutes:
+    var minutes = parseInt(seconds / 60).toString().padStart(2, '0'); // 60 seconds in 1 minute
+    // 4- Keep only seconds not extracted to minutes:
+    seconds = (seconds % 60).toString().padStart(2, '0');
+    if (hours == 0) {
+        return (minutes + ":" + seconds);
+    } else { return (hours + ":" + minutes + ":" + seconds); }
+
+}
+
+
+savedata = setInterval(function() {
+    if (isCompleteDataChecking == 1) {
+        accumulatedTime = accumulatedTime + 1000;
+        database.ref('users/' + userid).update({
+            studyTime: accumulatedTime.toString()
+        });
+    }
+
 }, 1000);
 
 window.onresize = function(event) {
     var windowWidth = window.matchMedia("screen and (max-width: 960px)");
     if (windowWidth.matches) {
-        $('#chats').css({ position: 'absolute', width: '100%', height: '70%' });
+        $('#player').css({
+            width: '100%',
+            height: '25vh',
+            margin: '0',
+        });
+        $('#player').css('margin-top', '20px');
+        $('#player').css('border-radius', '0 0 20px 20px');
 
-        $('#chats').css({ top: $('.video').outerHeight() + 30 + 'px' });
-        $('#chats').css({ height: $(window).height() - $('.video').outerHeight() - 100 + 'px' });
+        $('#videos-others').css({ top: $('.video').outerHeight() + 30 + 'px' });
+        $('#chats').css({ position: 'absolute', width: '100%' });
+
+        $('#chats').css({ top: $('#videos-others').offset().top + $('#videos-others').outerHeight() + 30 + 'px' });
+        $('#chats').css({ height: $(window).height() - ($('#videos-others').offset().top + $('#videos-others').outerHeight()) - 100 + 'px' });
     } else {
-        $('#chats').css({ position: 'fixed', top: '20px', right: '0', width: '30%', height: '87%' });
+        $('#player').css({
+            width: '55%',
+            height: '50vh'
+        });
+        $('#player').css('margin', '20px');
+        $('#player').css('border-radius', '20px');
+
+        $('#videos-others').css({ top: '0px' });
+        $('#chats').css({ position: 'fixed', top: $('#videos-others').outerHeight() + 30 + 'px', right: '0', width: '30%', height: $(window).height() - ($('#videos-others').offset().top + $('#videos-others').outerHeight()) - 100 + 'px' });
 
     }
 

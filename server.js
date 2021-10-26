@@ -30,8 +30,8 @@ app.use(session({
 const kakao = {
         clientID: '51e4976c7ef7df823c92663cdaef6fbc',
         clientSecret: 'pSgJYbhkgNFdAkZZ0R2jfM4QxBUS7XQQ',
-        redirectUri: 'https://comeon-yo.herokuapp.com/auth/kakao/callback'
-            //redirectUri: 'http://localhost:3000/auth/kakao/callback'
+        //redirectUri: 'https://comeon-yo.herokuapp.com/auth/kakao/callback'
+        redirectUri: 'http://localhost:3000/auth/kakao/callback'
     }
     //profile account_email
 app.get('/auth/kakao', (req, res) => {

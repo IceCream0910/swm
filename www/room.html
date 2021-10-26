@@ -60,7 +60,7 @@
             </p>
             <p>
                 <small>
-						<i>친구에게 이 링크를 공유하세요.</i><br />
+						<i></i><br />
 						<span class="roomLink">{{roomLink}}</span>
 						<a class="copyURL" href="javascript:void(0)" v-on:click="copyURL">{{copyText || "복사"}}</a>
 					</small>
@@ -79,26 +79,35 @@
         <div id="chatWrap">
             <div id="video-container">
                 <section id="videos">
+
                 </section>
                 <section id="youtube-sec" style="display:none;">
                     <div id="player"></div>
                 </section>
-            </div>
+                <section id="videos-others">
+                </section>
 
-            <div id="chats" ref="chats">
-                <div class="chat" v-for="(chat, i) in chats" v-bind:key="i">
-                    <span class="name">{{chat.name}}</span>
-                    <span class="date light"> &middot; {{formatDate(chat.date)}}</span>
-                    <div class="message" v-html="linkify(chat.message)"></div>
+
+                <div id="chats" ref="chats">
+
+
+                    <div class="chat" v-for="(chat, i) in chats" v-bind:key="i">
+                        <span class="name">{{chat.name}}</span>
+                        <span class="date light"> &middot; {{formatDate(chat.date)}}</span>
+                        <div class="message" v-html="linkify(chat.message)"></div>
+                    </div>
+                    <div id="noChat" class="light" v-if="!chats.length" style="margin-top:30vh;">
+                        <small>                            <div class="icon-message-square" style="display:inline-block;"></div>
+                            메시지를 남겨보세요</small></div>
+
                 </div>
-                <div id="noChat" class="light" v-if="!chats.length" style="margin-top:30vh;"><small>💬 메시지를 남겨보세요</small></div>
-
-            </div>
-            <div id="composeBox">
-                <div id="placeholder" v-if="typing.length <= 0">입력 후 엔터키로 전송</div>
-                <div id="compose" contenteditable="true" v-on:keydown.enter="sendChat" v-on:input="edit($event)" v-on:paste="paste($event)"></div>
+                <div id="composeBox">
+                    <div id="placeholder" v-if="typing.length <= 0">입력 후 엔터키로 전송</div>
+                    <div id="compose" contenteditable="true" v-on:keydown.enter="sendChat" v-on:input="edit($event)" v-on:paste="paste($event)"></div>
+                </div>
             </div>
         </div>
+
 
         <div class="overlay" id="youtubeWrap" v-if="showYoutubeSet">
             <div class="modal">
@@ -160,11 +169,12 @@
         <div id="actionsWrap">
             <div id="actions">
                 <button v-blind:class="'hang-up'" v-on:click="javascript:history.back();" style="background-color: #e74c3c;border-radius:1rem;color:#fff;height:55px;"><ion-icon name="exit-outline" style="font-size: 22px;"></ion-icon></button>
-                <button v-bind:class="'icon-mic'+(audioEnabled ? '' : '-off')" v-on:click="audioToggle"></button>
-                <button v-bind:class="'icon-video'+(videoEnabled ? '' : '-off')" v-on:click="videoToggle"></button>
-                <button v-bind:class="(showYoutubeSet ? 'active' : '')" v-on:click="showYoutubeSet = !showYoutubeSet;showSettings=false;"><img src="https://www.seekpng.com/png/full/21-215231_transparent-download-social-png-icon-free-download-number.png" style="width:23px;"></button>
-                <button v-bind:class="'icon-monitor '+(screenshareEnabled ? 'active' : '')" v-on:click="screenShareToggle"></button>
-                <button v-bind:class="'icon-more-horizontal '+(showSettings ? 'active' : '')" v-on:click="showSettings = !showSettings;showYoutubeSet=false;"></button>
+                <button v-bind:class="'icon-mic'+(audioEnabled ? '' : '-off')" v-on:click="audioToggle" style="color:white;"></button>
+
+                <button v-bind:class="'icon-video'+(videoEnabled ? '' : '-off')" v-on:click="videoToggle" style="color:white;"></button>
+                <button v-bind:class="(showYoutubeSet ? 'active' : '')" v-on:click="showYoutubeSet = !showYoutubeSet;showSettings=false;"><img src="https://logodix.com/logo/395164.png" style="width:23px;color:white;"></button>
+                <button v-bind:class="'icon-monitor '+(screenshareEnabled ? 'active' : '')" v-on:click="screenShareToggle" style="color:white;"></button>
+                <button v-bind:class="'icon-more-horizontal '+(showSettings ? 'active' : '')" v-on:click="showSettings = !showSettings;showYoutubeSet=false;" style="color:white;"></button>
             </div>
         </div>
     </main>

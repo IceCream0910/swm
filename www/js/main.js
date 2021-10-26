@@ -66,6 +66,7 @@ function msToHMS(ms) {
 }
 
 function updateUserList(data, length) {
+    var today = todayDate.toString().substring(0, 10);
     var userlist = {};
 
     $('.userlist').html('');
@@ -78,11 +79,16 @@ function updateUserList(data, length) {
 
 
     var foundValue = Object.values(userlist).filter(user => user.uid === userid);
+    if (foundValue[0].lastStudy.toString().indexOf(today) != -1) {
+        $('#today_stimeFull').html('오늘 나는<br><span class="time_text" id="today_stime"></span> 공부했어요.');
+        $('#today_stime').html(msToHMS(Number(foundValue[0].studyTime)));
+    } else {
+        $('#today_stimeFull').html('오늘 아직<br>공부한 시간이 없네요 :(');
+    }
 
-    $('#today_stime').html(msToHMS(Number(foundValue[0].studyTime)));
 
     for (var i = 0; i < length; i++) {
-        var today = todayDate.toString().substring(0, 10);
+
         if (userlist[i].lastStudy.toString().indexOf(today) != -1) {
             $('.userlist').append('<div class="user-item"><img src="https://abs.twimg.com/sticky/default_profile_images/default_profile_400x400.png" class="rank_img"><h4 class="rank_name">' + userlist[i].nickname + '</h4> <h4><span class="time_text rank_time">' + msToHMS(Number(userlist[i].studyTime)) + '</span></h4> </div>');
         } else {
