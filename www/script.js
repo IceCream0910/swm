@@ -211,6 +211,7 @@ function init() {
         delete dataChannels[peer_id];
         delete peers[peer_id];
         delete peerMediaElements[config.peer_id];
+        resizeVideos();
     });
 }
 const attachMediaStream = (element, stream) => (element.srcObject = stream);
@@ -305,6 +306,13 @@ const resizeVideos = () => {
     document.querySelectorAll("#videos .video").forEach((v) => {
         v.className = "video " + numToString[videos.length];
     });
+
+    // Object.keys(peers).length : 참여자수
+    if(Object.keys(peers).length == 0) {
+        $('.nonePeerMsg').show();
+    } else {
+        $('.nonePeerMsg').hide();
+    }
 
     var windowWidth = window.matchMedia("screen and (max-width: 960px)");
     if (windowWidth.matches) {
