@@ -1,35 +1,13 @@
-# Talk
+# Study With me
+WebRTC를 이용한 스터디 그룹 서비스
 
-## A free group video call app with screen sharing.
-
-It is built using WebRTC, so all your video, audio & text chat is peer-to-peer. Group video call is achieved using WebRTC mesh. So the quality of the call is inversely proportional to the number of people on the call. The sweet number is somewhere around 6 to 8 people in an average high-speed connection.
-
-### Prerequisites:
-
-- Node.js 8.x or above
-- NPM
-
-### How to Build this app locally
-
-[Fork this repo](https://github.com/vasanthv/talk/fork) and then clone it:
-
-```
-git clone https://github.com/<your_name>/talk.git
-```
-
-`cd talk` and then install dependencies
-
-```
-npm install
-```
-
-Run the app
-
-```
-npm start
-```
-
-to start the talk server on port 3000. Your talk instance will be running on http://localhost:3000. Alternatively you can run the application using docker with `docker-compose up`.
+- [x] 카카오 로그인 연동
+- [ ] TODO리스트, 스터디그룹 정보 서버 연동
+- [x] 화상회의 구현
+- [x] 스터디 그룹 생성/삭제/수정/가입 구현
+- [ ] 스터디 그룹 내 공동 TODO 생성
+- [ ] 랭킹 기능 구현
+- [ ] 화상회의 접속  구현
 
 ### LICENSE
 
